@@ -161,6 +161,4 @@ Modern evergreen browsers (Chrome, Firefox, Safari, Edge). Uses `color-mix()`, C
 
 Made by [**Joaquín Bozzalla**](https://joaquinbozzalla.com) with [**Open Design**](https://github.com/nexu-io/open-design) &nbsp;·&nbsp; [github.com/joaquinbozzalla](https://github.com/joaquinbozzalla)
 
-`> one thousand no's for every yes`
-
 </div>
