@@ -25,7 +25,9 @@ Modern and minimal in structure; retro in texture.
 
 ## Live demo
 
-Open the HTML files directly in a browser — no build step, no dependencies.
+🟢 **[joaquinbozzalla.github.io/phosphor-design-system](https://joaquinbozzalla.github.io/phosphor-design-system/)**
+
+Or open the HTML files directly in a browser — no build step, no dependencies.
 
 - [`design-system.html`](./design-system.html) — the full system: color, type, space, components, motion, imagery, voice.
 - [`editorial-content.html`](./editorial-content.html) — the system applied to long-form content: links, tables, images, video, code, callouts.
