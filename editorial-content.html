@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en" data-theme="dark"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editorial content · Phosphor CRT Design System</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  /* =========================================================
+     EDITORIAL CONTENT REFERENCE
+     How long-form blog content renders inside the CRT system.
+     Tokens come from colors_and_type.css — nothing invented.
+     ========================================================= */
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+  body {
+    background: var(--bg-1);
+    color: var(--fg-1);
+    font-family: var(--font-sans);
+    font-size: var(--t-md);
+    line-height: var(--lh-normal);
+    -webkit-font-smoothing: antialiased;
+    transition: background .25s var(--ease-out), color .25s var(--ease-out);
+  }
+  /* Page-level scanline + bloom — whisper quiet (~3%). */
+  body::after {
+    content: "";
+    position: fixed; inset: 0;
+    background: var(--scanline);
+    pointer-events: none;
+    z-index: 5;
+    mix-blend-mode: screen;
+  }
+  :root[data-theme="light"] body::after { mix-blend-mode: multiply; }
+
+  a { color: inherit; }
+  img, video, svg { max-width: 100%; display: block; }
+
+  /* ---------- shared label / prompt vocabulary ---------- */
+  .k-label {
+    font-family: var(--font-mono);
+    font-size: var(--t-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    color: var(--fg-2);
+  }
+  .k-label--bracket::before { content: "[ "; color: var(--fg-3); }
+  .k-label--bracket::after  { content: " ]"; color: var(--fg-3); }
+  .k-prompt::before {
+    content: "> ";
+    color: var(--primary);
+    font-family: var(--font-mono);
+    text-shadow: var(--text-glow-sm);
+  }
+
+  /* ===================== HEADER (matches design-system.html) ===================== */
+  header.site {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 64px;
+    display: flex; align-items: center; gap: var(--sp-5);
+    padding: 0 clamp(var(--sp-4), 5vw, var(--sp-6));
+    background: color-mix(in srgb, var(--bg-1) 82%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: var(--bw-1) solid var(--border-2);
+  }
+  .wordmark {
+    font-family: var(--font-mono); font-weight: 700; font-size: var(--t-md);
+    text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    color: var(--primary); text-shadow: var(--text-glow-sm);
+    white-space: nowrap;
+  }
+  .wordmark b { color: var(--fg-0); }
+  .site-nav { display: flex; gap: var(--sp-5); margin-left: auto; }
+  .site-nav a {
+    font-family: var(--font-mono); font-size: var(--t-xs);
+    text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    color: var(--fg-2); text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out), text-shadow var(--dur-fast) var(--ease-out);
+  }
+  .site-nav a:hover { color: var(--primary-hover); text-shadow: var(--text-glow-sm); }
+
+  .theme-toggle {
+    font-family: var(--font-mono); font-size: var(--t-xs);
+    text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    color: var(--primary); background: var(--bg-2);
+    border: var(--bw-1) solid var(--border-2); border-radius: var(--r-3);
+    padding: var(--sp-2) var(--sp-4); cursor: pointer;
+    transition: box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  }
+  .theme-toggle:hover { border-color: var(--border-3); box-shadow: var(--shadow-glow-sm); }
+  @media (max-width: 860px) { .site-nav { display: none; } .theme-toggle { margin-left: auto; } }
+
+  /* ===================== LAYOUT ===================== */
+  main { max-width: 1200px; margin: 0 auto; padding: calc(64px + clamp(var(--sp-6), 5vw, var(--sp-8))) clamp(var(--sp-4), 5vw, var(--sp-8)) clamp(var(--sp-6), 5vw, var(--sp-9)); }
+
+  /* hero — eyebrow + display headline + lead + meta badges (design-system vocabulary) */
+  .page-head { margin-bottom: var(--sp-9); max-width: 820px; }
+  .page-head h1 { margin: var(--sp-4) 0 var(--sp-5); }
+  .page-head p { max-width: 60ch; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-top: var(--sp-6); }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: var(--t-xs);
+    text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    padding: 4px 10px; border-radius: var(--r-pill);
+    border: var(--bw-1) solid var(--border-2); color: var(--fg-2);
+  }
+  .badge.ok { color: var(--success); border-color: color-mix(in srgb, var(--success) 45%, transparent); }
+  .badge.warn { color: var(--warning); border-color: color-mix(in srgb, var(--warning) 45%, transparent); }
+  .badge.info { color: var(--info); border-color: color-mix(in srgb, var(--info) 45%, transparent); }
+
+  /* spec section wrapper — one editorial component per block (block-head vocabulary) */
+  .spec { margin-bottom: var(--sp-9); scroll-margin-top: 90px; }
+  .spec > header { display: block; margin-bottom: var(--sp-6); }
+  .spec > header .idx {
+    font-family: var(--font-mono); font-size: var(--t-xs);
+    text-transform: uppercase; letter-spacing: var(--tracking-wider);
+    color: var(--fg-2);
+  }
+  .spec > header .idx::before { content: "[ "; color: var(--fg-3); }
+  .spec > header .idx::after  { content: " ]"; color: var(--fg-3); }
+  .spec > header h2 {
+    font-family: var(--font-sans); font-weight: 700;
+    font-size: var(--t-3xl); line-height: var(--lh-snug); letter-spacing: var(--tracking-tight);
+    color: var(--fg-0); text-shadow: var(--text-glow-sm);
+    margin: var(--sp-2) 0 var(--sp-3);
+  }
+  .spec > header .note { font-size: var(--t-md); color: var(--fg-2); max-width: 64ch; }
+
+  /* the demo surface — opaque card, sharp CRT chrome */
+  .demo {
+    position: relative;
+    background: var(--bg-2);
+    border: var(--bw-1) solid var(--border-2);
+    border-radius: var(--r-2);
+    padding: clamp(var(--sp-5), 4vw, var(--sp-7));
+  }
+  .demo + .demo { margin-top: var(--sp-4); }
+
+  /* === PROSE — the article body baseline === */
+  .prose { max-width: 68ch; }
+  .prose > * + * { margin-top: var(--sp-5); }
+  .prose h1, .prose h2, .prose h3, .prose h4 {
+    font-family: var(--font-sans); color: var(--fg-0);
+    line-height: var(--lh-snug); letter-spacing: var(--tracking-tight);
+    text-shadow: var(--text-glow-sm);
+  }
+  .prose h1 { font-size: var(--t-4xl); font-weight: 700; margin-top: var(--sp-7); }
+  .prose h2 { font-size: var(--t-2xl); font-weight: 700; margin-top: var(--sp-7); }
+  .prose h3 { font-size: var(--t-xl); font-weight: 700; margin-top: var(--sp-6); }
+  .prose h4 {
+    font-size: var(--t-md); font-weight: 700; margin-top: var(--sp-5);
+    font-family: var(--font-mono); text-transform: uppercase;
+    letter-spacing: var(--tracking-wide); color: var(--fg-2);
+    text-shadow: none;
+  }
+  .prose p { color: var(--fg-1); line-height: var(--lh-loose); text-wrap: pretty; }
+  .prose .lead { font-size: var(--t-lg); color: var(--fg-0); line-height: var(--lh-loose); }
+  .prose strong { color: var(--fg-0); font-weight: 700; }
+  .prose em { font-style: italic; color: var(--fg-1); }
+  .prose hr { border: 0; border-top: var(--bw-1) dashed var(--border-dashed); margin: var(--sp-7) 0; }
+
+  /* inline link — brighten + underline at offset, never scale */
+  .prose a, a.inline-link {
+    color: var(--primary); text-decoration: underline;
+    text-decoration-thickness: 1px; text-underline-offset: 4px;
+    text-decoration-color: var(--border-3);
+    transition: color .15s, text-shadow .15s, text-decoration-color .15s;
+  }
+  .prose a:hover, a.inline-link:hover {
+    color: var(--primary-hover); text-shadow: var(--text-glow-sm);
+    text-decoration-color: var(--primary);
+  }
+  .prose a[target="_blank"]::after,
+  a.inline-link[target="_blank"]::after { content: " ↗"; font-family: var(--font-mono); font-size: .85em; }
+
+  /* inline code */
+  .prose code, code.inline {
+    font-family: var(--font-mono); font-size: .86em;
+    background: var(--bg-inset); color: var(--accent);
+    border: var(--bw-1) solid var(--border-1);
+    border-radius: var(--r-1); padding: .12em .4em;
+  }
+
+  /* === LINK BUTTONS === */
+  .btn-row { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
+  .btn {
+    appearance: none; cursor: pointer; text-decoration: none;
+    display: inline-flex; align-items: center; gap: var(--sp-2);
+    font-family: var(--font-mono); font-size: var(--t-sm);
+    text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    padding: 10px 18px; border-radius: var(--r-3);
+    border: var(--bw-1) solid var(--border-2);
+    transition: color .15s, background .15s, box-shadow .15s, border-color .15s;
+  }
+  .btn-primary { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); box-shadow: var(--shadow-glow-sm); }
+  .btn-primary:hover { background: var(--primary-hover); box-shadow: var(--shadow-glow-md); }
+  .btn-primary:active { background: var(--primary-press); box-shadow: inset 0 0 12px rgba(0,0,0,.5); }
+  .btn-secondary { background: transparent; color: var(--fg-1); }
+  .btn-secondary:hover { color: var(--primary-hover); border-color: var(--border-3); box-shadow: var(--shadow-glow-sm); }
+
+  /* === LISTS === */
+  .prose ul, .prose ol { padding-left: 1.4em; color: var(--fg-1); line-height: var(--lh-loose); }
+  .prose li + li { margin-top: var(--sp-2); }
+  .prose ul { list-style: none; padding-left: 0; }
+  .prose ul > li { position: relative; padding-left: 1.6em; }
+  .prose ul > li::before {
+    content: "▸"; position: absolute; left: 0; top: 0;
+    color: var(--primary); font-family: var(--font-mono);
+    text-shadow: var(--text-glow-sm);
+  }
+  .prose ul ul { margin-top: var(--sp-2); }
+  .prose ul ul > li::before { content: "·"; color: var(--fg-3); }
+  .prose ol { list-style: none; counter-reset: li; padding-left: 0; }
+  .prose ol > li { position: relative; padding-left: 2.4em; counter-increment: li; }
+  .prose ol > li::before {
+    content: counter(li, decimal-leading-zero); position: absolute; left: 0; top: 0;
+    color: var(--accent); font-family: var(--font-mono); font-size: .85em;
+    letter-spacing: var(--tracking-wide);
+  }
+  /* task list */
+  .task-list { list-style: none; padding-left: 0; }
+  .task-list li { display: flex; align-items: baseline; gap: var(--sp-3); }
+  .task-list .box { font-family: var(--font-mono); color: var(--fg-3); }
+  .task-list .done .box { color: var(--primary); text-shadow: var(--text-glow-sm); }
+  .task-list .done span:last-child { color: var(--fg-3); text-decoration: line-through; }
+  /* definition list */
+  .prose dl { display: grid; grid-template-columns: minmax(120px, 1fr) 3fr; gap: var(--sp-3) var(--sp-5); }
+  .prose dt { font-family: var(--font-mono); font-size: var(--t-sm); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--accent); }
+  .prose dd { margin: 0; color: var(--fg-1); }
+
+  /* === TABLE === */
+  .prose table { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
+  .prose caption { text-align: left; font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: var(--tracking-wider); color: var(--fg-3); padding-bottom: var(--sp-3); }
+  .prose thead th {
+    text-align: left; font-family: var(--font-mono); font-weight: 500;
+    text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    font-size: var(--t-xs); color: var(--fg-2);
+    padding: var(--sp-3); border-bottom: var(--bw-1) solid var(--border-2);
+  }
+  .prose tbody td { padding: var(--sp-3); border-bottom: var(--bw-1) solid var(--border-1); color: var(--fg-1); }
+  .prose tbody tr:hover td { background: var(--bg-3); }
+  /* Per-column alignment — header always matches its cells. */
+  .prose th.num, .prose td.num { text-align: right; }
+  .prose th.center, .prose td.center, .prose th.status, .prose td.status-cell { text-align: center; }
+  .prose td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--fg-0); }
+  .status-cell { font-family: var(--font-mono); font-size: var(--t-xs); }
+  .status-cell.ok { color: var(--success); } .status-cell.warn { color: var(--warning); } .status-cell.err { color: var(--danger); }
+
+  /* === BLOCKQUOTE === */
+  blockquote.bq {
+    border-left: var(--bw-2) solid var(--primary);
+    padding: var(--sp-2) 0 var(--sp-2) var(--sp-5);
+    color: var(--fg-0); font-size: var(--t-lg); line-height: var(--lh-loose);
+  }
+  blockquote.bq cite { display: block; margin-top: var(--sp-3); font-style: normal; font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: var(--tracking-wider); color: var(--fg-3); }
+  blockquote.bq cite::before { content: "— "; }
+
+  /* pull quote — large, glowing, scanlined */
+  .pullquote {
+    position: relative; text-align: center;
+    padding: var(--sp-8) var(--sp-5); margin: var(--sp-7) 0;
+    border-block: var(--bw-1) solid var(--border-2);
+    overflow: hidden;
+  }
+  .pullquote::before { content: ""; position: absolute; inset: 0; background: var(--scanline); pointer-events: none; }
+  .pullquote q {
+    font-family: var(--font-sans); font-weight: 700;
+    font-size: clamp(var(--t-2xl), 4vw, var(--t-4xl));
+    line-height: var(--lh-tight); letter-spacing: var(--tracking-tight);
+    color: var(--primary); text-shadow: var(--text-glow-md); quotes: none;
+  }
+
+  /* === FIGURE / IMAGE === */
+  figure.fig { margin: 0; }
+  figure.fig .frame {
+    position: relative; border: var(--bw-1) solid var(--border-2);
+    border-radius: var(--r-2); overflow: hidden; background: var(--bg-0);
+  }
+  figure.fig .frame::after { content: ""; position: absolute; inset: 0; background: var(--scanline); pointer-events: none; }
+  figure.fig img { width: 100%; height: auto; }
+  figure.fig figcaption {
+    display: flex; gap: var(--sp-3); align-items: baseline;
+    margin-top: var(--sp-3); font-size: var(--t-sm); color: var(--fg-2); line-height: var(--lh-normal);
+  }
+  figure.fig figcaption .tag { font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: var(--tracking-wider); color: var(--fg-3); white-space: nowrap; }
+
+  /* === GALLERY === */
+  .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--sp-3); }
+  .gallery a {
+    position: relative; display: block; aspect-ratio: 4/3; overflow: hidden;
+    border: var(--bw-1) solid var(--border-2); border-radius: var(--r-2); background: var(--bg-0);
+  }
+  .gallery img { width: 100%; height: 100%; object-fit: cover; transition: filter .2s, opacity .2s; }
+  .gallery a::after { content: ""; position: absolute; inset: 0; background: var(--scanline); pointer-events: none; }
+  .gallery a::before {
+    content: attr(data-n); position: absolute; top: var(--sp-2); left: var(--sp-2); z-index: 2;
+    font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: var(--tracking-wide);
+    color: var(--primary); background: color-mix(in srgb, var(--bg-0) 70%, transparent); padding: 2px 6px; border-radius: var(--r-1);
+  }
+  .gallery a:hover { box-shadow: var(--shadow-glow-md); border-color: var(--border-3); }
+  .gallery a:hover img { opacity: .85; }
+
+  /* === VIDEO === */
+  .video-figure { margin: 0; }
+  .player {
+    position: relative; aspect-ratio: 16/9; overflow: hidden;
+    border: var(--bw-1) solid var(--border-2); border-radius: var(--r-2); background: var(--bg-0);
+  }
+  .player img { width: 100%; height: 100%; object-fit: cover; opacity: .55; }
+  .player::after { content: ""; position: absolute; inset: 0; background: var(--scanline); pointer-events: none; }
+  .player .bar {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 3;
+    display: flex; align-items: center; gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-3); font-family: var(--font-mono);
+    font-size: var(--t-xs); color: var(--fg-2); letter-spacing: var(--tracking-wide);
+    background: color-mix(in srgb, var(--bg-0) 75%, transparent);
+    border-bottom: var(--bw-1) solid var(--border-1);
+  }
+  .player .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--fg-4); }
+  .player .dot.live { background: var(--danger); box-shadow: 0 0 6px var(--danger); }
+  .player .play {
+    position: absolute; inset: 0; z-index: 2; display: grid; place-items: center;
+    background: transparent; border: 0; cursor: pointer; color: var(--primary);
+  }
+  .player .play .disc {
+    width: 84px; height: 84px; border-radius: 50%;
+    border: var(--bw-2) solid var(--primary); display: grid; place-items: center;
+    box-shadow: var(--shadow-glow-md); background: color-mix(in srgb, var(--bg-0) 50%, transparent);
+    transition: box-shadow .2s, background .2s;
+  }
+  .player .play:hover .disc { box-shadow: var(--shadow-glow-lg); background: color-mix(in srgb, var(--primary) 12%, transparent); }
+  .player .play .disc::before { content: ""; border-style: solid; border-width: 14px 0 14px 22px; border-color: transparent transparent transparent var(--primary); margin-left: 6px; filter: drop-shadow(var(--text-glow-sm)); }
+  .player .scrub { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; height: 4px; background: var(--bg-inset); }
+  .player .scrub i { display: block; height: 100%; width: 34%; background: var(--primary); box-shadow: var(--shadow-glow-sm); }
+
+  /* === CODE / TERMINAL === */
+  pre.code {
+    margin: 0; background: var(--bg-inset);
+    border: var(--bw-1) solid var(--border-2); border-radius: var(--r-2);
+    padding: var(--sp-5); overflow-x: auto;
+    font-family: var(--font-mono); font-size: var(--t-sm); line-height: var(--lh-loose);
+    color: var(--fg-1);
+  }
+  pre.code .c { color: var(--fg-3); } /* comment */
+  pre.code .k { color: var(--accent); } /* keyword */
+  pre.code .s { color: var(--primary); } /* string */
+  pre.code .f { color: var(--fg-0); } /* fn / ident */
+
+  .terminal {
+    background: var(--bg-0); border: var(--bw-1) solid var(--border-2);
+    border-radius: var(--r-2); overflow: hidden; box-shadow: var(--shadow-glow-sm);
+  }
+  .terminal .tbar {
+    display: flex; align-items: center; gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-3); border-bottom: var(--bw-1) solid var(--border-1);
+    font-family: var(--font-mono); font-size: var(--t-xs); color: var(--fg-3); letter-spacing: var(--tracking-wide);
+  }
+  .terminal .tbar .d { width: 9px; height: 9px; border-radius: 50%; border: 1px solid var(--border-2); }
+  .terminal .tbar .d:nth-child(1) { background: var(--danger); }
+  .terminal .tbar .d:nth-child(2) { background: var(--warning); }
+  .terminal .tbar .d:nth-child(3) { background: var(--success); }
+  .terminal .tbar .title { margin-left: var(--sp-2); }
+  .terminal .tbody {
+    position: relative; padding: var(--sp-4) var(--sp-5);
+    font-family: var(--font-mono); font-size: var(--t-sm); line-height: var(--lh-loose);
+    color: var(--fg-1);
+  }
+  .terminal .tbody::after { content: ""; position: absolute; inset: 0; background: var(--scanline); pointer-events: none; }
+  .terminal .line { white-space: pre-wrap; }
+  .terminal .cmd::before { content: "$ "; color: var(--primary); text-shadow: var(--text-glow-sm); }
+  .terminal .ok { color: var(--success); }
+  .terminal .err { color: var(--danger); }
+  .terminal .dim { color: var(--fg-3); }
+
+  /* === CALLOUTS / ASIDES === */
+  .callout {
+    display: grid; grid-template-columns: auto 1fr; gap: var(--sp-4);
+    padding: var(--sp-5); border-radius: var(--r-2);
+    border: var(--bw-1) solid var(--border-2); background: var(--bg-2);
+  }
+  .callout + .callout { margin-top: var(--sp-4); }
+  .callout .ico { font-family: var(--font-mono); font-weight: 700; font-size: var(--t-lg); line-height: 1; }
+  .callout .body { color: var(--fg-1); line-height: var(--lh-loose); }
+  .callout .body strong { display: block; font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: var(--tracking-wider); margin-bottom: var(--sp-2); }
+  .callout.note   { border-left: var(--bw-2) solid var(--info); }    .callout.note .ico, .callout.note strong { color: var(--info); }
+  .callout.tip    { border-left: var(--bw-2) solid var(--primary); } .callout.tip .ico, .callout.tip strong { color: var(--primary); }
+  .callout.warn   { border-left: var(--bw-2) solid var(--warning); } .callout.warn .ico, .callout.warn strong { color: var(--warning); }
+  .callout.danger { border-left: var(--bw-2) solid var(--danger); }  .callout.danger .ico, .callout.danger strong { color: var(--danger); }
+
+  /* aside / margin note */
+  .with-aside { display: grid; grid-template-columns: 1fr; gap: var(--sp-5); }
+  aside.margin-note {
+    border: var(--bw-1) dashed var(--border-dashed); border-radius: var(--r-2);
+    padding: var(--sp-4); background: var(--bg-2);
+    font-size: var(--t-sm); color: var(--fg-2); line-height: var(--lh-loose);
+  }
+  aside.margin-note .k-label { display: block; margin-bottom: var(--sp-2); }
+
+  /* footnotes */
+  sup.fnref { font-family: var(--font-mono); font-size: .7em; }
+  sup.fnref a { color: var(--accent); text-decoration: none; }
+  sup.fnref a:hover { text-shadow: var(--text-glow-sm); }
+  .footnotes { margin-top: var(--sp-6); padding-top: var(--sp-4); border-top: var(--bw-1) dashed var(--border-dashed); }
+  .footnotes ol { list-style: none; counter-reset: fn; padding-left: 0; font-size: var(--t-sm); color: var(--fg-2); }
+  .footnotes li { counter-increment: fn; padding-left: 2em; position: relative; line-height: var(--lh-loose); }
+  .footnotes li + li { margin-top: var(--sp-2); }
+  .footnotes li::before { content: "[" counter(fn) "]"; position: absolute; left: 0; font-family: var(--font-mono); color: var(--accent); }
+
+  /* === TOC / index of components === */
+  .toc { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--sp-2) var(--sp-5); margin-bottom: var(--sp-9); }
+  .toc a {
+    display: flex; align-items: baseline; gap: var(--sp-3); text-decoration: none;
+    padding: var(--sp-2) var(--sp-3); border-radius: var(--r-1);
+    border: var(--bw-1) solid transparent; color: var(--fg-2);
+    font-family: var(--font-mono); font-size: var(--t-sm);
+    transition: color .15s, border-color .15s, background .15s;
+  }
+  .toc a .n { color: var(--primary); }
+  .toc a:hover { color: var(--fg-0); border-color: var(--border-2); background: var(--bg-2); }
+
+  /* ===================== FOOTER ===================== */
+  footer.site {
+    border-top: var(--bw-1) solid var(--border-2);
+    padding: var(--sp-7) clamp(var(--sp-4), 5vw, var(--sp-8));
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+    gap: var(--sp-4);
+    font-family: var(--font-mono); font-size: var(--t-xs); color: var(--fg-3);
+    letter-spacing: var(--tracking-wide); text-align: center;
+  }
+  footer.site b { color: var(--fg-2); }
+  footer.site .sep { color: var(--fg-4); }
+  footer.site a {
+    color: var(--fg-2); text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out), text-shadow var(--dur-fast) var(--ease-out);
+  }
+  footer.site a:hover { color: var(--primary-hover); text-shadow: var(--text-glow-sm); }
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width: 720px) {
+    .prose dl { grid-template-columns: 1fr; gap: var(--sp-1); }
+    .prose dd { margin-bottom: var(--sp-3); }
+    .prose table { font-size: var(--t-xs); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body style="">
+  <header class="site">
+    <span class="wordmark">▚ PHOSPHOR<b>_EDITORIAL</b></span>
+    <nav class="site-nav" aria-label="Sections">
+      <a href="#typography">Type</a>
+      <a href="#links">Links</a>
+      <a href="#tables">Tables</a>
+      <a href="#images">Images</a>
+      <a href="#video">Video</a>
+      <a href="#code">Code</a>
+      <a href="#callouts">Notes</a>
+      <a href="design-system.html">&larr; System</a>
+    </nav>
+    <button class="theme-toggle" id="theme-toggle" type="button">◐ LIGHT MODE</button>
+  </header>
+
+  <main>
+    <div class="page-head">
+      <span class="k-label k-label--bracket eyebrow">REF / EDITORIAL-CONTENT · v1</span>
+      <h1 class="k-display">Editorial content on the green screen</h1>
+      <p class="k-lead k-prompt">Everything a blog post needs — images, video, links, full Markdown, code and notes — rendered inside the phosphor-CRT language. Each block below is the canonical pattern: copy it as-is and keep the aesthetic. Try both modes with the control at the top right.</p>
+      <div class="meta-row">
+        <span class="badge ok">● MODE: DARK + LIGHT</span>
+        <span class="badge">10 CONTENT BLOCKS</span>
+        <span class="badge info">SURFACE: WEB</span>
+        <span class="badge warn">IMAGES · VIDEO · MARKDOWN</span>
+      </div>
+    </div>
+
+    <nav class="toc" aria-label="Component index">
+      <a href="#typography"><span class="n">01</span> Typography / Markdown</a>
+      <a href="#links"><span class="n">02</span> Links and buttons</a>
+      <a href="#lists"><span class="n">03</span> Lists and definitions</a>
+      <a href="#tables"><span class="n">04</span> Tables</a>
+      <a href="#quotes"><span class="n">05</span> Quotes and pull quotes</a>
+      <a href="#images"><span class="n">06</span> Images with caption</a>
+      <a href="#gallery"><span class="n">07</span> Gallery</a>
+      <a href="#video"><span class="n">08</span> Embedded video</a>
+      <a href="#code"><span class="n">09</span> Code and terminal</a>
+      <a href="#callouts"><span class="n">10</span> Callouts, asides, notes</a>
+    </nav>
+
+    <!-- ===================== 01 · TYPOGRAPHY / MARKDOWN ===================== -->
+    <section class="spec" id="typography">
+      <header>
+        <span class="idx">01</span>
+        <h2>Typography and Markdown</h2>
+        <p class="note">h1–h4, lead, paragraph, emphasis, inline code, rule.</p>
+      </header>
+      <div class="demo">
+        <article class="prose">
+          <h1>Heading level one</h1>
+          <p class="lead">The lead opens the article: IBM Plex Mono at 18px, highest-contrast color, with a barely-perceptible phosphor bloom. A single hook sentence, in sentence case — never title case.</p>
+          <p>Body copy runs in IBM Plex Mono Regular at 15px / 1.7. Long lines breathe over the green-black and the global scanline passes over them without disturbing the read. You can mark text in <strong>bold to raise contrast</strong> or in <em>italics for a nuance</em>, and drop in <code class="inline">inline code</code> that turns amber inside its inset box.</p>
+          <h2>Heading level two</h2>
+          <p>Sections are separated by typographic hierarchy, not by ornament. An <a href="#links">internal link</a> glows in primary green and underlines at a 4px offset on hover — brighten, never scale.</p>
+          <h3>Heading level three</h3>
+          <p>The third level keeps IBM Plex Mono but drops in weight. It subdivides a long argument without breaking the reading rhythm.</p>
+          <h4>Fourth-level label</h4>
+          <p>The h4 switches to uppercase mono with wide tracking: it reads as a panel label rather than a title. Useful for fields, steps and metadata inside the text.</p>
+          <hr>
+          <p class="k-prompt">The horizontal rule is a dotted phosphor-trace line: it separates movements of the article without the weight of a solid border.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===================== 02 · LINKS & BUTTONS ===================== -->
+    <section class="spec" id="links">
+      <header>
+        <span class="idx">02</span>
+        <h2>Links and buttons</h2>
+        <p class="note">Inline (internal / external) and link buttons.</p>
+      </header>
+      <div class="demo">
+        <article class="prose">
+          <p>Within the text, an <a href="#typography">internal link</a> points to another section of the same document, while an <a href="https://example.com" target="_blank" rel="noopener">external link</a> adds an ↗ arrow and opens in a new tab. Both share the trace underline and the glow on hover.</p>
+        </article>
+        <div class="btn-row" style="margin-top: var(--sp-5);">
+          <a class="btn btn-primary" href="#">Read the full case →</a>
+          <a class="btn btn-secondary" href="#">Download PDF</a>
+          <a class="btn btn-secondary" href="https://example.com" target="_blank" rel="noopener">Repository ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 03 · LISTS ===================== -->
+    <section class="spec" id="lists">
+      <header>
+        <span class="idx">03</span>
+        <h2>Lists and definitions</h2>
+        <p class="note">Unordered, ordered, nested, task and definition list.</p>
+      </header>
+      <div class="demo">
+        <article class="prose">
+          <h4>Unordered (with nesting)</h4>
+          <ul>
+            <li>▸ marker in primary green with bloom.</li>
+            <li>The second level changes glyph and drops to muted:
+              <ul>
+                <li>Sub-item in phosphor grey.</li>
+                <li>Another sub-item.</li>
+              </ul>
+            </li>
+            <li>Third item at the root level.</li>
+          </ul>
+          <h4>Ordered</h4>
+          <ol>
+            <li>Mono numbering with leading zero, in amber.</li>
+            <li>Made for procedures and steps.</li>
+            <li>Tabular and left-aligned to the text.</li>
+          </ol>
+          <h4>Task list</h4>
+          <ul class="task-list">
+            <li class="done"><span class="box">[x]</span><span>Define color and typography tokens</span></li>
+            <li class="done"><span class="box">[x]</span><span>Base UI components</span></li>
+            <li><span class="box">[ ]</span><span>Editorial content support</span></li>
+            <li><span class="box">[ ]</span><span>Blog article template</span></li>
+          </ul>
+          <h4>Definition list</h4>
+          <dl>
+            <dt>Phosphor</dt><dd>The luminous green characteristic of CRTs; here, the system's primary color.</dd>
+            <dt>Printout</dt><dd>The light mode: green ink on parchment, no glow, like a printed session.</dd>
+            <dt>Scanline</dt><dd>A horizontal pattern at ~3% covering the whole page, giving screen texture.</dd>
+          </dl>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===================== 04 · TABLES ===================== -->
+    <section class="spec" id="tables">
+      <header>
+        <span class="idx">04</span>
+        <h2>Tables</h2>
+        <p class="note">Hairlines, tabular numerics, status cells.</p>
+      </header>
+      <div class="demo">
+        <article class="prose">
+          <table>
+            <caption>Recent deploys — pipeline log</caption>
+            <thead>
+              <tr><th class="num">Build</th><th>Service</th><th class="num">Duration</th><th class="status">Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="num">#4821</td><td>api-gateway</td><td class="num">2m 14s</td><td class="status-cell ok">● OK</td></tr>
+              <tr><td class="num">#4820</td><td>auth-worker</td><td class="num">1m 03s</td><td class="status-cell ok">● OK</td></tr>
+              <tr><td class="num">#4819</td><td>render-edge</td><td class="num">4m 47s</td><td class="status-cell warn">◆ SLOW</td></tr>
+              <tr><td class="num">#4818</td><td>billing-cron</td><td class="num">0m 12s</td><td class="status-cell err">○ FAILED</td></tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===================== 05 · QUOTES ===================== -->
+    <section class="spec" id="quotes">
+      <header>
+        <span class="idx">05</span>
+        <h2>Quotes and pull quotes</h2>
+        <p class="note">Blockquote with citation + large-format pull quote.</p>
+      </header>
+      <div class="demo">
+        <article class="prose">
+          <blockquote class="bq">
+            Good documentation reads like the operator's manual for a 1978 machine, written by someone who really loved their job.
+            <cite>Internal design note</cite>
+          </blockquote>
+          <div class="pullquote">
+            <q>The phosphor is already loud; that's why the layout stays quiet.</q>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===================== 06 · IMAGES ===================== -->
+    <section class="spec" id="images">
+      <header>
+        <span class="idx">06</span>
+        <h2>Images with caption</h2>
+        <p class="note">figure + figcaption, frame with scanline and overlay.</p>
+      </header>
+      <div class="demo">
+        <figure class="fig">
+          <div class="frame"><img src="illustrations/placeholder-photo.svg" data-illu="illustrations/placeholder-photo.svg" alt="Image placeholder — drop in your own 4:3 photo." loading="lazy"></div>
+          <figcaption>
+            <span class="tag">FIG.01</span>
+            <span>A real, full-bleed image inside the phosphor frame. The dark overlay and the scanline integrate it into the screen without resorting to a pill behind text.</span>
+          </figcaption>
+        </figure>
+      </div>
+      <div class="demo">
+        <figure class="fig">
+          <div class="frame"><img src="illustrations/satellite-blueprint.svg" data-illu="illustrations/satellite-blueprint.svg" alt="Line blueprint of a satellite." loading="lazy"></div>
+          <figcaption>
+            <span class="tag">FIG.02</span>
+            <span>Line illustration: it uses the <code class="inline">.svg</code> variant (bright phosphor) in dark and <code class="inline">-light.svg</code> (flat line on parchment) in light. The swap is automatic when the theme changes.</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ===================== 07 · GALLERY ===================== -->
+    <section class="spec" id="gallery">
+      <header>
+        <span class="idx">07</span>
+        <h2>Gallery</h2>
+        <p class="note">Responsive grid, 4:3 crop, plate number.</p>
+      </header>
+      <div class="demo">
+        <div class="gallery">
+          <a href="illustrations/placeholder-photo.svg" data-n="01"><img src="illustrations/placeholder-photo.svg" data-illu="illustrations/placeholder-photo.svg" alt="Image placeholder 01" loading="lazy"></a>
+          <a href="illustrations/placeholder-photo.svg" data-n="02"><img src="illustrations/placeholder-photo.svg" data-illu="illustrations/placeholder-photo.svg" alt="Image placeholder 02" loading="lazy"></a>
+          <a href="illustrations/placeholder-photo.svg" data-n="03"><img src="illustrations/placeholder-photo.svg" data-illu="illustrations/placeholder-photo.svg" alt="Image placeholder 03" loading="lazy"></a>
+          <a href="illustrations/placeholder-photo.svg" data-n="04"><img src="illustrations/placeholder-photo.svg" data-illu="illustrations/placeholder-photo.svg" alt="Image placeholder 04" loading="lazy"></a>
+          <a href="illustrations/placeholder-photo.svg" data-n="05"><img src="illustrations/placeholder-photo.svg" data-illu="illustrations/placeholder-photo.svg" alt="Image placeholder 05" loading="lazy"></a>
+          <a href="illustrations/placeholder-photo.svg" data-n="06"><img src="illustrations/placeholder-photo.svg" data-illu="illustrations/placeholder-photo.svg" alt="Image placeholder 06" loading="lazy"></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 08 · VIDEO ===================== -->
+    <section class="spec" id="video">
+      <header>
+        <span class="idx">08</span>
+        <h2>Embedded video</h2>
+        <p class="note">Player with terminal chrome + iframe pattern.</p>
+      </header>
+      <div class="demo">
+        <figure class="video-figure">
+          <div class="player">
+            <div class="bar"><span class="dot live"></span> PLAYING · capture-001.mov · 00:34 / 02:18</div>
+            <img src="illustrations/placeholder-photo.svg" data-illu="illustrations/placeholder-photo.svg" alt="Video placeholder — swap in your own poster frame." loading="lazy">
+            <button class="play" type="button" aria-label="Play"><span class="disc"></span></button>
+            <div class="scrub"><i></i></div>
+          </div>
+          <figcaption class="fig"><span class="tag" style="margin-top:var(--sp-3);display:inline-block;">VID.01</span></figcaption>
+        </figure>
+      </div>
+      <div class="demo">
+        <h4 class="k-label k-label--bracket" style="margin-bottom:var(--sp-3);">EMBED PATTERN · responsive 16:9 iframe</h4>
+        <pre class="code"><span class="c">&lt;!-- Wrapper that preserves the 16:9 ratio --&gt;</span>
+<span class="k">&lt;div</span> <span class="f">class</span>=<span class="s">"player"</span><span class="k">&gt;</span>
+  <span class="k">&lt;iframe</span>
+    <span class="f">src</span>=<span class="s">"https://www.youtube.com/embed/VIDEO_ID"</span>
+    <span class="f">title</span>=<span class="s">"Product demo"</span>
+    <span class="f">loading</span>=<span class="s">"lazy"</span>
+    <span class="f">allowfullscreen</span><span class="k">&gt;&lt;/iframe&gt;</span>
+<span class="k">&lt;/div&gt;</span></pre>
+      </div>
+    </section>
+
+    <!-- ===================== 09 · CODE & TERMINAL ===================== -->
+    <section class="spec" id="code">
+      <header>
+        <span class="idx">09</span>
+        <h2>Code and terminal</h2>
+        <p class="note">Highlighted code block + terminal output.</p>
+      </header>
+      <div class="demo">
+        <pre class="code"><span class="c">// resolve the stored theme and apply it on load</span>
+<span class="k">function</span> <span class="f">applyTheme</span>(theme) {
+  <span class="f">document</span>.documentElement.<span class="f">setAttribute</span>(<span class="s">"data-theme"</span>, theme);
+  <span class="f">localStorage</span>.<span class="f">setItem</span>(<span class="s">"phosphor:theme"</span>, theme);
+}</pre>
+      </div>
+      <div class="demo">
+        <div class="terminal">
+          <div class="tbar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="title">phosphor — zsh — 80×24</span></div>
+          <div class="tbody">
+<div class="line cmd">npm run build</div>
+<div class="line dim">› compiling tokens and templates…</div>
+<div class="line ok">[OK] colors_and_type.css   12 tokens resolved</div>
+<div class="line ok">[OK] editorial-content     10 blocks rendered</div>
+<div class="line err">[ERR] missing video poster --&gt; using placeholder</div>
+<div class="line dim">done in 1.84s</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 10 · CALLOUTS / ASIDES / FOOTNOTES ===================== -->
+    <section class="spec" id="callouts">
+      <header>
+        <span class="idx">10</span>
+        <h2>Callouts, asides and footnotes</h2>
+        <p class="note">Four callout tones, margin aside, footnotes.</p>
+      </header>
+      <div class="demo">
+        <div class="callout note"><span class="ico">i</span><div class="body"><strong>Note</strong>Context worth highlighting without slowing the read. Blue border <code class="inline">--info</code>.</div></div>
+        <div class="callout tip"><span class="ico">+</span><div class="body"><strong>Tip</strong>An actionable recommendation. Uses primary green to signal something is worth doing.</div></div>
+        <div class="callout warn"><span class="ico">!</span><div class="body"><strong>Caution</strong>Something that needs care but isn't critical. Amber <code class="inline">--warning</code>.</div></div>
+        <div class="callout danger"><span class="ico">×</span><div class="body"><strong>Danger</strong>A destructive or irreversible action. Red <code class="inline">--danger</code>, used sparingly.</div></div>
+      </div>
+      <div class="demo">
+        <article class="prose">
+          <div class="with-aside">
+            <p>The main text runs its normal course and can reference a footnote<sup class="fnref"><a href="#fn1" id="fnref1">[1]</a></sup> exactly where it belongs. Margin notes, in contrast, live in a dotted-trace box<sup class="fnref"><a href="#fn2" id="fnref2">[2]</a></sup>.</p>
+            <aside class="margin-note">
+              <span class="k-label">[ ASIDE ]</span>
+              A tangential comment: complementary information that doesn't interrupt the main thread. The dotted border marks it as secondary content.
+            </aside>
+          </div>
+          <div class="footnotes">
+            <span class="k-label" style="display:block;margin-bottom:var(--sp-3);">FOOTNOTES</span>
+            <ol>
+              <li id="fn1">Footnotes use amber mono numbering and link back and forth with the body.</li>
+              <li id="fn2">The block lives at the end of the article, separated by a dotted rule.</li>
+            </ol>
+          </div>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site">
+    <span>PHOSPHOR · <b>editorial-content.html</b></span>
+    <span class="sep">·</span>
+    <a href="https://github.com/joaquinbozzalla" target="_blank" rel="noopener">[ GITHUB / JOAQUINBOZZALLA ]</a>
+    <span class="sep">·</span>
+    <a href="https://joaquinbozzalla.com" target="_blank" rel="noopener">[ JOAQUINBOZZALLA.COM ]</a>
+  </footer>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var KEY = "ds:theme";   // shared with design-system.html so the mode carries across pages
+      var toggle = document.getElementById("theme-toggle");
+      function apply(theme) {
+        root.setAttribute("data-theme", theme);
+        toggle.textContent = theme === "light" ? "◑ DARK MODE" : "◐ LIGHT MODE";
+        try { localStorage.setItem(KEY, theme); } catch (e) {}
+        swapIllustrations(theme);
+      }
+      // Illustrations ship in dark (*.svg) + light (*-light.svg) variants.
+      function swapIllustrations(theme) {
+        document.querySelectorAll("img[data-illu]").forEach(function (img) {
+          var base = img.getAttribute("data-illu");
+          img.src = theme === "light" ? base.replace(".svg", "-light.svg") : base;
+        });
+      }
+      toggle.addEventListener("click", function () {
+        apply(root.getAttribute("data-theme") === "light" ? "dark" : "light");
+      });
+      var saved = "dark";
+      try { saved = localStorage.getItem(KEY) || "dark"; } catch (e) {}
+      apply(saved);
+
+      // Video play affordance — purely demonstrative toggle (no real media bundled).
+      document.addEventListener("click", function (e) {
+        var play = e.target.closest(".player .play");
+        if (!play) return;
+        var bar = play.closest(".player").querySelector(".dot");
+        if (bar) bar.classList.toggle("live");
+        play.querySelector(".disc").style.opacity = play.querySelector(".disc").style.opacity === "0" ? "1" : "0";
+      });
+    })();
+  </script>
+
+
+</body></html>

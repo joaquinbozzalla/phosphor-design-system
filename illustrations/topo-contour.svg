@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 240" fill="none" stroke="#39ff7a" color="#39ff7a" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter">
+  
+  <path d="M0,200 Q40,180 80,190 T160,180 T260,200 T360,190"></path>
+  <path d="M0,180 Q60,150 120,170 T240,160 T360,170"></path>
+  <path d="M0,160 Q50,120 100,140 T220,130 T360,150"></path>
+  <path d="M0,140 Q60,100 130,120 T260,110 T360,130"></path>
+  <path d="M20,120 Q80,80 150,100 T280,90 T360,110"></path>
+  <path d="M40,100 Q100,60 170,80 T300,70"></path>
+  <path d="M60,80 Q120,40 190,60 T320,50"></path>
+  <path d="M80,60 Q140,30 210,40 T320,30"></path>
+  <path d="M110,40 Q160,20 230,30"></path>
+  
+  <text x="6" y="232" font-family="JetBrains Mono, monospace" font-size="8" fill="#39ff7a" stroke="none">N 41.40°</text>
+  <text x="290" y="232" font-family="JetBrains Mono, monospace" font-size="8" fill="#39ff7a" stroke="none">W 074.00°</text>
+  <text x="6" y="14" font-family="JetBrains Mono, monospace" font-size="8" fill="#39ff7a" stroke="none">+1240M</text>
+  
+  <g transform="translate(180,120)">
+    <circle r="2" fill="#39ff7a"></circle>
+    <circle r="10"></circle>
+    <line x1="-16" y1="0" x2="-10" y2="0"></line>
+    <line x1="16" y1="0" x2="10" y2="0"></line>
+    <line x1="0" y1="-16" x2="0" y2="-10"></line>
+    <line x1="0" y1="16" x2="0" y2="10"></line>
+  </g>
+  <g transform="translate(280,90)">
+    <circle r="2" fill="#39ff7a"></circle>
+    <circle r="6"></circle>
+  </g>
+</svg>

@@ -1,0 +1,94 @@
+// =============================================================
+// Phosphor CRT design system — tokens.scss (brand-agnostic)
+// Generated export. Two themes: dark (default) + light (printout).
+// =============================================================
+
+// ---------- DARK MODE (default) ----------
+$color-dark: (
+  "bg-0":          #000503,
+  "bg-1":          #04110b,
+  "bg-2":          #06180f,
+  "bg-3":          #0a2418,
+  "bg-inset":      #020a06,
+  "fg-0":          #c8ffd9,
+  "fg-1":          #6fff9c,
+  "fg-2":          #3ddc7a,
+  "fg-3":          #1f8a4d,
+  "fg-4":          #0d4a29,
+  "primary":       #39ff7a,
+  "primary-hover": #6fff9c,
+  "primary-press": #1fd95f,
+  "primary-ink":   #021107,
+  "accent":        #ffb84a,
+  "success":       #39ff7a,
+  "warning":       #ffb84a,
+  "danger":        #ff4d4d,
+  "info":          #4dd0ff,
+  "border-1":      rgba(57, 255, 122, 0.18),
+  "border-2":      rgba(57, 255, 122, 0.32),
+  "border-3":      rgba(57, 255, 122, 0.55),
+  "border-dashed": rgba(57, 255, 122, 0.28),
+);
+
+// ---------- LIGHT MODE ----------
+$color-light: (
+  "bg-0":          #e8ecd9,
+  "bg-1":          #f1f3e3,
+  "bg-2":          #f7f8ec,
+  "bg-3":          #ecefd6,
+  "bg-inset":      #e0e4cf,
+  "fg-0":          #0a3318,
+  "fg-1":          #0f5a2a,
+  "fg-2":          #1e7a40,
+  "fg-3":          #4a9b66,
+  "fg-4":          #8ab59c,
+  "primary":       #0f7a3a,
+  "primary-hover": #0a5a2a,
+  "primary-press": #074421,
+  "primary-ink":   #f1f3e3,
+  "accent":        #b8631a,
+  "success":       #0f7a3a,
+  "warning":       #b8631a,
+  "danger":        #b41818,
+  "info":          #1064a6,
+  "border-1":      rgba(15, 90, 42, 0.18),
+  "border-2":      rgba(15, 90, 42, 0.35),
+  "border-3":      rgba(15, 90, 42, 0.7),
+  "border-dashed": rgba(15, 90, 42, 0.4),
+);
+
+// ---------- TYPOGRAPHY ----------
+$font-sans: "IBM Plex Mono", "SF Mono", "Menlo", "Consolas", ui-monospace, monospace;
+$font-mono: "IBM Plex Mono", "SF Mono", "Menlo", "Consolas", monospace;
+$font-alt:  "Satoshi", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+$font-crt:  "VT323", "IBM Plex Mono", monospace;
+
+$font-size: (
+  "xs": 11px, "sm": 13px, "md": 15px, "lg": 18px, "xl": 22px,
+  "2xl": 28px, "3xl": 36px, "4xl": 48px, "5xl": 64px, "6xl": 88px,
+);
+
+$line-height: ("tight": 1.05, "snug": 1.2, "normal": 1.5, "loose": 1.7);
+$tracking: ("tight": -0.02em, "normal": 0, "wide": 0.08em, "wider": 0.16em);
+
+// ---------- SPACING / RADII / BORDERS ----------
+$spacing: (
+  "0": 0, "1": 4px, "2": 8px, "3": 12px, "4": 16px,
+  "5": 24px, "6": 32px, "7": 48px, "8": 64px, "9": 96px, "10": 128px,
+);
+
+$radius: ("0": 0, "1": 2px, "2": 4px, "3": 8px, "4": 14px, "pill": 999px);
+$border-width: ("1": 1px, "2": 2px);
+
+// ---------- MOTION ----------
+$ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+$ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+$ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+$duration: ("fast": 120ms, "base": 220ms, "slow": 400ms, "sweep": 900ms);
+
+// ---------- HELPERS ----------
+// Usage: color: token($color-dark, "primary");
+@function token($map, $key) {
+  @return map-get($map, $key);
+}

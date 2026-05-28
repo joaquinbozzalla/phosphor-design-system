@@ -1,0 +1,419 @@
+/* =============================================================
+   PHOSPHOR CRT DESIGN SYSTEM — colors_and_type.css (brand-agnostic)
+   Inspired by old CRT/phosphor terminals. Light + dark modes.
+   ============================================================= */
+
+/* ---------- FONTS ---------- */
+/* Satoshi: brand sans for UI + display.
+   Mono: IBM Plex Mono — self-hosted, the machine-room voice of the system.
+   CRT pixel: VT323 via Google Fonts (boot screens only, ~5%). */
+
+@font-face { font-family: "Satoshi"; src: url("fonts/Satoshi-Light.otf") format("opentype"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("fonts/Satoshi-LightItalic.otf") format("opentype"); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("fonts/Satoshi-Regular.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("fonts/Satoshi-Italic.otf") format("opentype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("fonts/Satoshi-Medium.otf") format("opentype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("fonts/Satoshi-MediumItalic.otf") format("opentype"); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("fonts/Satoshi-Bold.otf") format("opentype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("fonts/Satoshi-BoldItalic.otf") format("opentype"); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("fonts/Satoshi-Black.otf") format("opentype"); font-weight: 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Satoshi"; src: url("fonts/Satoshi-BlackItalic.otf") format("opentype"); font-weight: 900; font-style: italic; font-display: swap; }
+
+/* IBM Plex Mono — self-hosted TTF (the system mono). */
+@font-face { font-family: "IBM Plex Mono"; src: url("fonts/ibm-plex-mono/mpoqnq0r-IBMPlexMono-Light.ttf") format("truetype"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("fonts/ibm-plex-mono/mpoqnq0p-IBMPlexMono-LightItalic.ttf") format("truetype"); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("fonts/ibm-plex-mono/mpoqnq0p-IBMPlexMono-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("fonts/ibm-plex-mono/mpoqnq0s-IBMPlexMono-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("fonts/ibm-plex-mono/mpoqnq0z-IBMPlexMono-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("fonts/ibm-plex-mono/mpoqnq0t-IBMPlexMono-MediumItalic.ttf") format("truetype"); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("fonts/ibm-plex-mono/mpoqnq0z-IBMPlexMono-SemiBold.ttf") format("truetype"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("fonts/ibm-plex-mono/mpoqnq0w-IBMPlexMono-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("fonts/ibm-plex-mono/mpoqnq0u-IBMPlexMono-BoldItalic.ttf") format("truetype"); font-weight: 700; font-style: italic; font-display: swap; }
+
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
+/* ---------- TOKENS — DARK MODE (default) ----------
+   Phosphor-on-black: the canonical look of this system. */
+:root,
+:root[data-theme="dark"] {
+  /* Surface — graded blacks with a hint of green chroma */
+  --bg-0:   #000503;          /* deepest, the void behind everything */
+  --bg-1:   #04110b;          /* page background */
+  --bg-2:   #06180f;          /* card / panel */
+  --bg-3:   #0a2418;          /* raised / hover */
+  --bg-inset: #020a06;        /* inset (input, code block) */
+
+  /* Foreground — phosphor green spectrum */
+  --fg-0:   #c8ffd9;          /* highest contrast / titles */
+  --fg-1:   #6fff9c;          /* default body */
+  --fg-2:   #3ddc7a;          /* secondary body / labels */
+  --fg-3:   #1f8a4d;          /* muted / placeholder */
+  --fg-4:   #0d4a29;          /* very muted / dividers-as-text */
+
+  /* Primary — the iconic phosphor green */
+  --primary:        #39ff7a;
+  --primary-hover:  #6fff9c;
+  --primary-press:  #1fd95f;
+  --primary-ink:    #021107;  /* text on top of primary */
+  --primary-glow:   rgba(57, 255, 122, 0.55);
+
+  /* Accent — amber CRT (the other vintage screen color) */
+  --accent:         #ffb84a;
+  --accent-glow:    rgba(255, 184, 74, 0.5);
+
+  /* Semantic */
+  --success: #39ff7a;
+  --warning: #ffb84a;
+  --danger:  #ff4d4d;
+  --info:    #4dd0ff;
+
+  /* Borders — phosphor traces */
+  --border-1: rgba(57, 255, 122, 0.18);   /* hairline divider */
+  --border-2: rgba(57, 255, 122, 0.32);   /* card border */
+  --border-3: rgba(57, 255, 122, 0.55);   /* active border / focus */
+  --border-dashed: rgba(57, 255, 122, 0.28);
+
+  /* Effects */
+  --scanline:    repeating-linear-gradient(
+    to bottom,
+    rgba(57, 255, 122, 0.03) 0px,
+    rgba(57, 255, 122, 0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  --noise-opacity: 0.04;
+
+  /* Shadows — phosphor glow, not gaussian shadow */
+  --shadow-glow-sm: 0 0 6px rgba(57, 255, 122, 0.25);
+  --shadow-glow-md: 0 0 14px rgba(57, 255, 122, 0.35), 0 0 2px rgba(57, 255, 122, 0.6);
+  --shadow-glow-lg: 0 0 28px rgba(57, 255, 122, 0.45), 0 0 4px rgba(57, 255, 122, 0.7);
+  --shadow-inner:   inset 0 0 24px rgba(0, 0, 0, 0.85), inset 0 0 80px rgba(0, 0, 0, 0.4);
+
+  /* Text shadow — phosphor bloom */
+  --text-glow-sm: 0 0 2px rgba(57, 255, 122, 0.6);
+  --text-glow-md: 0 0 4px rgba(57, 255, 122, 0.8), 0 0 8px rgba(57, 255, 122, 0.4);
+  --text-glow-lg: 0 0 8px rgba(57, 255, 122, 0.9), 0 0 18px rgba(57, 255, 122, 0.5);
+}
+
+/* ---------- TOKENS — LIGHT MODE ----------
+   Inverted phosphor: green ink on a parchment/screen of off-white.
+   Like reading a printout of the terminal session. */
+:root[data-theme="light"] {
+  --bg-0:   #e8ecd9;
+  --bg-1:   #f1f3e3;
+  --bg-2:   #f7f8ec;
+  --bg-3:   #ecefd6;
+  --bg-inset: #e0e4cf;
+
+  --fg-0:   #0a3318;
+  --fg-1:   #0f5a2a;
+  --fg-2:   #1e7a40;
+  --fg-3:   #4a9b66;
+  --fg-4:   #8ab59c;
+
+  --primary:        #0f7a3a;
+  --primary-hover:  #0a5a2a;
+  --primary-press:  #074421;
+  --primary-ink:    #f1f3e3;
+  --primary-glow:   rgba(15, 122, 58, 0.22);
+
+  --accent:         #b8631a;
+  --accent-glow:    rgba(184, 99, 26, 0.25);
+
+  --success: #0f7a3a;
+  --warning: #b8631a;
+  --danger:  #b41818;
+  --info:    #1064a6;
+
+  --border-1: rgba(15, 90, 42, 0.18);
+  --border-2: rgba(15, 90, 42, 0.35);
+  --border-3: rgba(15, 90, 42, 0.7);
+  --border-dashed: rgba(15, 90, 42, 0.4);
+
+  --scanline:    repeating-linear-gradient(
+    to bottom,
+    rgba(15, 90, 42, 0.025) 0px,
+    rgba(15, 90, 42, 0.025) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  --noise-opacity: 0.06;
+
+  --shadow-glow-sm: 0 1px 0 rgba(15, 90, 42, 0.06);
+  --shadow-glow-md: 0 2px 0 rgba(15, 90, 42, 0.1), 0 0 0 1px rgba(15, 90, 42, 0.08);
+  --shadow-glow-lg: 0 4px 0 rgba(15, 90, 42, 0.12), 0 0 0 1px rgba(15, 90, 42, 0.1);
+  --shadow-inner:   inset 0 0 0 1px rgba(15, 90, 42, 0.08);
+
+  --text-glow-sm: none;
+  --text-glow-md: none;
+  --text-glow-lg: none;
+}
+
+/* ---------- TYPE TOKENS ---------- */
+:root {
+  /* IBM Plex Mono is the primary family for the whole system — UI, body, and display.
+     Satoshi is kept available as an optional alternate face via --font-alt. */
+  --font-sans: "IBM Plex Mono", "SF Mono", "Menlo", "Consolas", ui-monospace, monospace;
+  --font-mono: "IBM Plex Mono", "SF Mono", "Menlo", "Consolas", monospace;
+  --font-alt:  "Satoshi", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-crt:  "VT323", "IBM Plex Mono", monospace;   /* the chunky pixel terminal font */
+
+  /* Scale (1.250 — major third) */
+  --t-xs:  11px;
+  --t-sm:  13px;
+  --t-md:  15px;     /* body */
+  --t-lg:  18px;
+  --t-xl:  22px;
+  --t-2xl: 28px;
+  --t-3xl: 36px;
+  --t-4xl: 48px;
+  --t-5xl: 64px;
+  --t-6xl: 88px;
+
+  --lh-tight:  1.05;
+  --lh-snug:   1.2;
+  --lh-normal: 1.5;
+  --lh-loose:  1.7;
+
+  --tracking-tight:  -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide:   0.08em;
+  --tracking-wider:  0.16em;   /* used for LABELS / monospace UI */
+
+  /* Spacing — 4px base, ramps for layout */
+  --sp-0: 0;
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --sp-9: 96px;
+  --sp-10: 128px;
+
+  /* Radii — kept SMALL on purpose. CRT chrome is sharp/boxy.
+     The largest radius is reserved for pill controls / data viz. */
+  --r-0: 0;
+  --r-1: 2px;       /* default — barely-rounded */
+  --r-2: 4px;       /* cards */
+  --r-3: 8px;       /* buttons */
+  --r-4: 14px;      /* modals */
+  --r-pill: 999px;
+
+  /* Borders */
+  --bw-1: 1px;
+  --bw-2: 2px;
+
+  /* Motion */
+  --ease-out:    cubic-bezier(.16, 1, .3, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+  --ease-step:   steps(8, end);            /* CRT scanline / sweep feel */
+
+  --dur-fast:   120ms;
+  --dur-base:   220ms;
+  --dur-slow:   400ms;
+  --dur-sweep:  900ms;                     /* big boot / scan effects */
+}
+
+/* ---------- SEMANTIC TYPOGRAPHY ---------- */
+.k-display,
+h1.k-display {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(var(--t-4xl), 8vw, var(--t-6xl));
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg-0);
+  text-shadow: var(--text-glow-lg);
+}
+
+h1, .k-h1 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: var(--t-4xl);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg-0);
+  text-shadow: var(--text-glow-md);
+}
+
+h2, .k-h2 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: var(--t-3xl);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg-0);
+  text-shadow: var(--text-glow-sm);
+}
+
+h3, .k-h3 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: var(--t-2xl);
+  line-height: var(--lh-snug);
+  color: var(--fg-0);
+}
+
+h4, .k-h4 {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--t-xl);
+  line-height: var(--lh-snug);
+  color: var(--fg-0);
+}
+
+p, .k-p {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--t-md);
+  line-height: var(--lh-normal);
+  color: var(--fg-1);
+}
+
+.k-lead {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--t-lg);
+  line-height: var(--lh-normal);
+  color: var(--fg-1);
+  text-wrap: pretty;
+}
+
+small, .k-small {
+  font-family: var(--font-sans);
+  font-size: var(--t-sm);
+  color: var(--fg-2);
+}
+
+/* Label — the workhorse. Uppercase mono with a bracket prefix is brand DNA. */
+.k-label {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--t-xs);
+  line-height: var(--lh-snug);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--fg-2);
+}
+
+.k-label--bracket::before { content: "[ "; color: var(--fg-3); }
+.k-label--bracket::after  { content: " ]"; color: var(--fg-3); }
+
+.k-prompt::before {
+  content: "> ";
+  color: var(--primary);
+  font-family: var(--font-mono);
+}
+
+/* Mono / code */
+code, kbd, samp, .k-code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  color: var(--primary);
+  background: var(--bg-inset);
+  border: 1px solid var(--border-1);
+  padding: 0.05em 0.4em;
+  border-radius: var(--r-1);
+}
+
+pre, .k-pre {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg-1);
+  background: var(--bg-inset);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-2);
+  padding: var(--sp-4);
+  overflow: auto;
+}
+
+/* CRT — the chunky pixel font, used sparingly for boot screens / headers */
+.k-crt {
+  font-family: var(--font-crt);
+  letter-spacing: 0.02em;
+  color: var(--primary);
+  text-shadow: var(--text-glow-md);
+}
+
+/* Selection */
+::selection { background: var(--primary); color: var(--primary-ink); }
+
+/* Base */
+html { color-scheme: dark; }
+:root[data-theme="light"] { color-scheme: light; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--t-md);
+  line-height: var(--lh-normal);
+  color: var(--fg-1);
+  background: var(--bg-1);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- UTILITIES ---------- */
+.k-scanlines {
+  position: relative;
+  isolation: isolate;
+}
+.k-scanlines::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: var(--scanline);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.k-screen-curve {
+  border-radius: var(--r-4);
+  box-shadow: var(--shadow-inner);
+}
+
+/* Cursor blink — used on prompts, inputs at-rest */
+@keyframes k-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.k-cursor::after {
+  content: "▌";
+  display: inline-block;
+  margin-left: 0.05em;
+  color: var(--primary);
+  animation: k-blink 1s steps(1, end) infinite;
+  text-shadow: var(--text-glow-md);
+}
+
+/* Scanline sweep — used for boot/load */
+@keyframes k-sweep {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(120%); }
+}
+
+/* Subtle flicker — for the whole screen */
+@keyframes k-flicker {
+  0%, 100% { opacity: 1; }
+  92%      { opacity: 0.96; }
+  94%      { opacity: 1; }
+  96%      { opacity: 0.93; }
+  98%      { opacity: 1; }
+}
+
+/* Typewriter reveal */
+@keyframes k-type {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+/* Reduced-motion: kill all of it */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

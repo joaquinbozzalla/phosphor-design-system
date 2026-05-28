@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Phosphor CRT — Design System</title>
+
+<!-- Real exported source of truth: tokens + @font-face (IBM Plex Mono primary, Satoshi alternate) + semantic type classes + utilities -->
+<link rel="stylesheet" href="colors_and_type.css" />
+
+<style>
+  /* ============================================================
+     Documentation page chrome only.
+     All color / type / spacing values come from colors_and_type.css.
+     This block never redefines a design token — it only consumes them.
+     ============================================================ */
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+  body { background: var(--bg-1); }
+
+  /* Page-level scanline + flicker, whisper quiet (~3% alpha from token) */
+  body::after {
+    content: "";
+    position: fixed; inset: 0;
+    background: var(--scanline);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* ---------- Header ---------- */
+  .site-header {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 64px;
+    display: flex; align-items: center; gap: var(--sp-5);
+    padding: 0 var(--sp-6);
+    background: color-mix(in srgb, var(--bg-1) 82%, transparent);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-bottom: var(--bw-1) solid var(--border-2);
+    z-index: 20;
+  }
+  .wordmark {
+    font-family: var(--font-mono);
+    font-weight: 700; font-size: var(--t-md);
+    text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    color: var(--primary); text-shadow: var(--text-glow-sm);
+    white-space: nowrap;
+  }
+  .wordmark b { color: var(--fg-0); }
+  .site-nav { display: flex; gap: var(--sp-5); margin-left: auto; }
+  .site-nav a {
+    font-family: var(--font-mono); font-size: var(--t-xs);
+    text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    color: var(--fg-2); text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out), text-shadow var(--dur-fast) var(--ease-out);
+  }
+  .site-nav a:hover { color: var(--primary-hover); text-shadow: var(--text-glow-sm); }
+  @media (max-width: 860px) { .site-nav { display: none; } }
+
+  .site-footer {
+    border-top: var(--bw-1) solid var(--border-2);
+    margin-top: var(--sp-9);
+    padding: var(--sp-7) var(--sp-6);
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+    gap: var(--sp-4);
+    font-family: var(--font-mono); font-size: var(--t-xs);
+    text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    color: var(--fg-3); text-align: center;
+  }
+  .site-footer b { color: var(--fg-2); }
+  .site-footer .sep { color: var(--fg-4); }
+  .site-footer a {
+    color: var(--fg-2); text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out), text-shadow var(--dur-fast) var(--ease-out);
+  }
+  .site-footer a:hover { color: var(--primary-hover); text-shadow: var(--text-glow-sm); }
+
+  .theme-toggle {
+    font-family: var(--font-mono); font-size: var(--t-xs);
+    text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    color: var(--primary); background: var(--bg-2);
+    border: var(--bw-1) solid var(--border-2); border-radius: var(--r-3);
+    padding: var(--sp-2) var(--sp-4); cursor: pointer;
+    transition: box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  }
+  .theme-toggle:hover { border-color: var(--border-3); box-shadow: var(--shadow-glow-sm); }
+
+  /* ---------- Layout ---------- */
+  main { max-width: 1200px; margin: 0 auto; padding: 0 var(--sp-6) var(--sp-10); }
+  .hero {
+    padding: calc(64px + var(--sp-9)) 0 var(--sp-8);
+    border-bottom: var(--bw-1) solid var(--border-1);
+  }
+  .hero .eyebrow { margin-bottom: var(--sp-4); }
+  .hero h1 { margin: 0 0 var(--sp-5); }
+  .hero .k-lead { max-width: 60ch; }
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-top: var(--sp-6);
+  }
+
+  section.block { padding: var(--sp-9) 0; border-bottom: var(--bw-1) solid var(--border-1); }
+  .block-head { margin-bottom: var(--sp-6); }
+  .block-head h2 { margin: var(--sp-2) 0 var(--sp-3); }
+  .block-head p { max-width: 64ch; color: var(--fg-2); }
+
+  .grid { display: grid; gap: var(--sp-4); }
+  .cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .cols-5 { grid-template-columns: repeat(5, 1fr); }
+  @media (max-width: 900px) { .cols-4, .cols-5 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .cols-2, .cols-3 { grid-template-columns: 1fr; } }
+
+  .subhead {
+    margin: var(--sp-7) 0 var(--sp-4);
+  }
+
+  /* ---------- Swatches ---------- */
+  .swatch {
+    border: var(--bw-1) solid var(--border-2); border-radius: var(--r-2);
+    overflow: hidden; background: var(--bg-2);
+  }
+  .swatch .chip { height: 84px; border-bottom: var(--bw-1) solid var(--border-1); }
+  .swatch .info { padding: var(--sp-3) var(--sp-4); }
+  .swatch .tok {
+    font-family: var(--font-mono); font-size: var(--t-sm);
+    color: var(--fg-0); display: block;
+  }
+  .swatch .role { font-size: var(--t-xs); color: var(--fg-3); }
+  .swatch .val {
+    font-family: var(--font-mono); font-size: var(--t-xs);
+    color: var(--fg-2); margin-top: var(--sp-1); display: block;
+    text-transform: uppercase;
+  }
+
+  /* ---------- Type specimens ---------- */
+  .spec {
+    border: var(--bw-1) solid var(--border-1); border-radius: var(--r-2);
+    padding: var(--sp-5); background: var(--bg-2); margin-bottom: var(--sp-4);
+  }
+  .spec .tag {
+    font-family: var(--font-mono); font-size: var(--t-xs); color: var(--fg-3);
+    text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    display: block; margin-bottom: var(--sp-3);
+  }
+  table.scale { width: 100%; border-collapse: collapse; }
+  table.scale th, table.scale td {
+    text-align: left; padding: var(--sp-3) var(--sp-4);
+    border-bottom: var(--bw-1) solid var(--border-1);
+    font-size: var(--t-sm);
+  }
+  table.scale th {
+    font-family: var(--font-mono); font-size: var(--t-xs); color: var(--fg-3);
+    text-transform: uppercase; letter-spacing: var(--tracking-wide); font-weight: 500;
+  }
+  table.scale td.tok { font-family: var(--font-mono); color: var(--accent); }
+  table.scale .demo { color: var(--fg-0); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px; }
+
+  /* ---------- Spacing / radii / glow ---------- */
+  .sp-row { display: flex; align-items: center; gap: var(--sp-4); margin-bottom: var(--sp-3); }
+  .sp-row .lab { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--fg-2); width: 120px; flex: none; }
+  .sp-bar { height: 14px; background: var(--primary); border-radius: var(--r-1); box-shadow: var(--shadow-glow-sm); }
+  .radius-box {
+    height: 110px; display: grid; place-items: center;
+    background: var(--bg-3); border: var(--bw-1) solid var(--border-2);
+  }
+  .radius-box .lab { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--fg-2); }
+  .glow-box {
+    height: 110px; display: grid; place-items: center; background: var(--bg-2);
+    border: var(--bw-1) solid var(--border-1); border-radius: var(--r-2);
+  }
+  .glow-inner { width: 56px; height: 56px; background: var(--bg-3); border: var(--bw-1) solid var(--border-2); border-radius: var(--r-2); }
+
+  /* ---------- Components ---------- */
+  .panel {
+    border: var(--bw-1) solid var(--border-2); border-radius: var(--r-2);
+    background: var(--bg-2); padding: var(--sp-5);
+  }
+  .panel > .k-label { display: block; margin-bottom: var(--sp-4); }
+
+  .btn {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    padding: var(--sp-3) var(--sp-5); border-radius: var(--r-3);
+    border: var(--bw-1) solid var(--border-2); cursor: pointer;
+    background: transparent; color: var(--fg-1);
+    transition: box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .btn:hover { color: var(--primary-hover); border-color: var(--border-3); box-shadow: var(--shadow-glow-sm); }
+  .btn-primary {
+    background: var(--primary); color: var(--primary-ink); border-color: var(--primary);
+    box-shadow: var(--shadow-glow-sm);
+  }
+  .btn-primary:hover { background: var(--primary-hover); color: var(--primary-ink); box-shadow: var(--shadow-glow-md); }
+  .btn-primary:active { background: var(--primary-press); box-shadow: var(--shadow-inner); }
+  .btn-row { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
+
+  .field { display: block; }
+  .field .lab { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--fg-2); margin-bottom: var(--sp-2); }
+  .field .lab::before { content: "> "; color: var(--primary); }
+  .input {
+    width: 100%; font-family: var(--font-mono); font-size: var(--t-sm);
+    color: var(--fg-0); background: var(--bg-inset);
+    border: var(--bw-1) solid var(--border-2); border-radius: var(--r-1);
+    padding: var(--sp-3) var(--sp-4);
+    transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  }
+  .input::placeholder { color: var(--fg-3); }
+  .input:focus { outline: none; border-color: var(--primary); box-shadow: var(--shadow-glow-sm); }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: var(--t-xs);
+    text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    padding: 4px 10px; border-radius: var(--r-pill);
+    border: var(--bw-1) solid var(--border-2); color: var(--fg-2);
+  }
+  .badge.ok { color: var(--success); border-color: color-mix(in srgb, var(--success) 45%, transparent); }
+  .badge.warn { color: var(--warning); border-color: color-mix(in srgb, var(--warning) 45%, transparent); }
+  .badge.err { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
+  .badge.info { color: var(--info); border-color: color-mix(in srgb, var(--info) 45%, transparent); }
+
+  .alert {
+    display: flex; gap: var(--sp-3); align-items: flex-start;
+    border: var(--bw-1) solid var(--border-2); border-left-width: 2px;
+    border-radius: var(--r-2); padding: var(--sp-4); background: var(--bg-2);
+    font-size: var(--t-sm); margin-bottom: var(--sp-3);
+  }
+  .alert .mk { font-family: var(--font-mono); font-size: var(--t-xs); }
+  .alert.ok { border-left-color: var(--success); } .alert.ok .mk { color: var(--success); }
+  .alert.warn { border-left-color: var(--warning); } .alert.warn .mk { color: var(--warning); }
+  .alert.err { border-left-color: var(--danger); } .alert.err .mk { color: var(--danger); }
+
+  .progress { height: 8px; background: var(--bg-inset); border: var(--bw-1) solid var(--border-1); border-radius: var(--r-pill); overflow: hidden; }
+  .progress > i { display: block; height: 100%; background: var(--primary); box-shadow: var(--shadow-glow-sm); }
+  .progress.sweep > i { position: relative; }
+  .progress.sweep > i::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-0) 60%, transparent), transparent);
+    animation: k-sweep var(--dur-sweep) var(--ease-step) infinite; transform: none;
+    animation-name: prog-sweep;
+  }
+  @keyframes prog-sweep { 0% { transform: translateX(-100%); } 100% { transform: translateX(220%); } }
+
+  .segmented { display: inline-flex; border: var(--bw-1) solid var(--border-2); border-radius: var(--r-pill); overflow: hidden; }
+  .segmented button {
+    font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: var(--tracking-wide);
+    background: transparent; color: var(--fg-2); border: 0; padding: var(--sp-2) var(--sp-4); cursor: pointer;
+  }
+  .segmented button[aria-pressed="true"] { background: var(--primary); color: var(--primary-ink); }
+
+  /* Terminal block — the signature surface */
+  .terminal { border: var(--bw-1) solid var(--border-2); border-radius: var(--r-2); overflow: hidden; background: var(--bg-inset); box-shadow: var(--shadow-inner); }
+  .terminal .bar { display: flex; align-items: center; gap: 8px; padding: var(--sp-3) var(--sp-4); background: var(--bg-2); border-bottom: var(--bw-1) solid var(--border-1); }
+  .terminal .dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--border-2); }
+  .terminal .dot.g { background: var(--primary); box-shadow: var(--shadow-glow-sm); }
+  .terminal .dot.a { background: var(--accent); }
+  .terminal .dot.r { background: var(--danger); }
+  .terminal .title { margin-left: 8px; font-family: var(--font-mono); font-size: var(--t-xs); color: var(--fg-3); letter-spacing: var(--tracking-wide); }
+  .terminal pre { margin: 0; border: 0; border-radius: 0; background: transparent; padding: var(--sp-4) var(--sp-5); }
+  .terminal .ok { color: var(--success); } .terminal .err { color: var(--danger); } .terminal .pr { color: var(--primary); }
+  .terminal .mut { color: var(--fg-3); }
+
+  /* ---------- Illustrations ---------- */
+  .illo {
+    border: var(--bw-1) solid var(--border-2); border-radius: var(--r-2);
+    background: var(--bg-2); padding: var(--sp-5); display: grid; gap: var(--sp-3);
+    place-items: center;
+  }
+  .illo img { width: 100%; height: 140px; object-fit: contain; }
+  .illo .name { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--fg-2); letter-spacing: var(--tracking-wide); }
+
+  /* ---------- Voice / do-dont ---------- */
+  .dd { display: grid; gap: var(--sp-3); }
+  .dd .row { display: flex; gap: var(--sp-3); align-items: flex-start; font-size: var(--t-sm); }
+  .dd .mk { font-family: var(--font-mono); flex: none; width: 28px; }
+  .dd .yes .mk { color: var(--success); } .dd .no .mk { color: var(--danger); }
+
+  .motion-demo { display: grid; gap: var(--sp-3); }
+  .typewriter {
+    font-family: var(--font-mono); color: var(--fg-0); white-space: nowrap; overflow: hidden;
+    border-right: 2px solid var(--primary); width: 0;
+    animation: k-type 2.4s steps(34, end) infinite alternate, k-blink 1s steps(1) infinite;
+  }
+</style>
+</head>
+<body class="k-flicker">
+
+<header class="site-header">
+  <span class="wordmark">▚ PHOSPHOR<b>_CRT</b></span>
+  <nav class="site-nav">
+    <a href="#color">Color</a>
+    <a href="#type">Type</a>
+    <a href="#space">Space</a>
+    <a href="#components">Components</a>
+    <a href="#motion">Motion</a>
+    <a href="#illustrations">Imagery</a>
+    <a href="#voice">Voice</a>
+    <a href="editorial-content.html">Editorial &rarr;</a>
+  </nav>
+  <button class="theme-toggle" id="theme-toggle" type="button">◐ LIGHT MODE</button>
+</header>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <span class="k-label k-label--bracket eyebrow">DESIGN SYSTEM · CRT TERMINAL</span>
+    <h1 class="k-display">Engineering docs<br>from a future that<br>already happened.</h1>
+    <p class="k-lead k-prompt">A brand-agnostic phosphor-green terminal system. Black screens, glowing green type, hand-drawn line geometries, restrained animation — modern and minimal at the same time.</p>
+    <div class="meta-row">
+      <span class="badge ok">● MODE: DARK + LIGHT</span>
+      <span class="badge">SATOSHI / IBM PLEX MONO / VT323</span>
+      <span class="badge info">SURFACE: WEB</span>
+      <span class="badge warn">MONOCHROME + 1 ACCENT</span>
+    </div>
+  </section>
+
+  <!-- ============ COLOR ============ -->
+  <section class="block" id="color">
+    <div class="block-head">
+      <span class="k-label k-label--bracket">01</span>
+      <h2>Color</h2>
+      <p>Monochromatic greens plus one amber accent. Never more than three hues on a single surface. No purples, no body-background gradients. Values resolve live from the active theme.</p>
+    </div>
+
+    <h4 class="subhead k-label">Surfaces</h4>
+    <div class="grid cols-5" data-swatches>
+      <div class="swatch"><div class="chip" data-token="--bg-0"></div><div class="info"><span class="tok">--bg-0</span><span class="role">Void</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--bg-1"></div><div class="info"><span class="tok">--bg-1</span><span class="role">Page</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--bg-2"></div><div class="info"><span class="tok">--bg-2</span><span class="role">Card / panel</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--bg-3"></div><div class="info"><span class="tok">--bg-3</span><span class="role">Raised / hover</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--bg-inset"></div><div class="info"><span class="tok">--bg-inset</span><span class="role">Input / code</span><span class="val" data-val></span></div></div>
+    </div>
+
+    <h4 class="subhead k-label">Foreground — phosphor spectrum</h4>
+    <div class="grid cols-5" data-swatches>
+      <div class="swatch"><div class="chip" data-token="--fg-0"></div><div class="info"><span class="tok">--fg-0</span><span class="role">Titles</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--fg-1"></div><div class="info"><span class="tok">--fg-1</span><span class="role">Body</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--fg-2"></div><div class="info"><span class="tok">--fg-2</span><span class="role">Secondary / labels</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--fg-3"></div><div class="info"><span class="tok">--fg-3</span><span class="role">Muted</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--fg-4"></div><div class="info"><span class="tok">--fg-4</span><span class="role">Dividers</span><span class="val" data-val></span></div></div>
+    </div>
+
+    <h4 class="subhead k-label">Primary + accent</h4>
+    <div class="grid cols-4" data-swatches>
+      <div class="swatch"><div class="chip" data-token="--primary"></div><div class="info"><span class="tok">--primary</span><span class="role">Phosphor green</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--primary-hover"></div><div class="info"><span class="tok">--primary-hover</span><span class="role">Brighten</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--primary-press"></div><div class="info"><span class="tok">--primary-press</span><span class="role">Press</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--accent"></div><div class="info"><span class="tok">--accent</span><span class="role">Amber CRT</span><span class="val" data-val></span></div></div>
+    </div>
+
+    <h4 class="subhead k-label">Semantic</h4>
+    <div class="grid cols-4" data-swatches>
+      <div class="swatch"><div class="chip" data-token="--success"></div><div class="info"><span class="tok">--success</span><span class="role">OK</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--warning"></div><div class="info"><span class="tok">--warning</span><span class="role">Warn</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--danger"></div><div class="info"><span class="tok">--danger</span><span class="role">Danger</span><span class="val" data-val></span></div></div>
+      <div class="swatch"><div class="chip" data-token="--info"></div><div class="info"><span class="tok">--info</span><span class="role">Info</span><span class="val" data-val></span></div></div>
+    </div>
+  </section>
+
+  <!-- ============ TYPE ============ -->
+  <section class="block" id="type">
+    <div class="block-head">
+      <span class="k-label k-label--bracket">02</span>
+      <h2>Typography</h2>
+      <p>IBM Plex Mono is the primary face across the whole system — UI, body and display — giving the machine-room character everywhere; VT323 is reserved for the occasional pixel boot screen (~5%).</p>
+    </div>
+
+    <div class="spec"><span class="tag">.k-display · IBM Plex Mono 700</span><div class="k-display">Mission control.</div></div>
+    <div class="spec"><span class="tag">h1 / .k-h1</span><h1 class="k-h1">Phosphor headline</h1></div>
+    <div class="spec"><span class="tag">h2 / .k-h2</span><h2 class="k-h2">Section heading</h2></div>
+    <div class="spec"><span class="tag">h3 / .k-h3</span><h3 class="k-h3">Subsection heading</h3></div>
+    <div class="spec"><span class="tag">.k-lead</span><p class="k-lead">A lead paragraph carries the opening idea at 18px with comfortable line-height, used once near the top of a view.</p></div>
+    <div class="spec"><span class="tag">p / body · 15px</span><p>Body copy runs in IBM Plex Mono regular. Terse, technical, slightly conspiratorial — the operator's manual for a piece of 1978 hardware built by someone who really liked their job.</p></div>
+    <div class="spec">
+      <span class="tag">.k-label · the workhorse</span>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center;">
+        <span class="k-label">STATUS PANEL</span>
+        <span class="k-label k-label--bracket">SECTION 04</span>
+        <span class="k-prompt" style="font-family:var(--font-mono);color:var(--fg-1)">run diagnostics</span>
+        <span class="k-crt" style="font-size:28px">BOOT OK</span>
+      </div>
+    </div>
+    <div class="spec"><span class="tag">code · pre</span>
+      <p style="margin-bottom:12px">Inline <code>--primary: #39ff7a</code> and a block:</p>
+      <pre>$ ./deploy --target=mainframe
+[OK] phosphor calibrated
+[OK] 14 production apps online</pre>
+    </div>
+
+    <h4 class="subhead k-label">Type scale — 1.250 major third</h4>
+    <table class="scale">
+      <thead><tr><th>Token</th><th>Size</th><th>Specimen</th></tr></thead>
+      <tbody>
+        <tr><td class="tok">--t-6xl</td><td>88px</td><td class="demo" style="font-size:var(--t-6xl);line-height:1">Aa</td></tr>
+        <tr><td class="tok">--t-5xl</td><td>64px</td><td class="demo" style="font-size:var(--t-5xl);line-height:1">Aa</td></tr>
+        <tr><td class="tok">--t-4xl</td><td>48px</td><td class="demo" style="font-size:var(--t-4xl);line-height:1">Aa</td></tr>
+        <tr><td class="tok">--t-3xl</td><td>36px</td><td class="demo" style="font-size:var(--t-3xl)">The quick green fox</td></tr>
+        <tr><td class="tok">--t-2xl</td><td>28px</td><td class="demo" style="font-size:var(--t-2xl)">The quick green fox</td></tr>
+        <tr><td class="tok">--t-xl</td><td>22px</td><td class="demo" style="font-size:var(--t-xl)">The quick green fox</td></tr>
+        <tr><td class="tok">--t-lg</td><td>18px</td><td class="demo" style="font-size:var(--t-lg)">The quick green fox jumps</td></tr>
+        <tr><td class="tok">--t-md</td><td>15px · body</td><td class="demo" style="font-size:var(--t-md)">The quick green fox jumps over</td></tr>
+        <tr><td class="tok">--t-sm</td><td>13px</td><td class="demo" style="font-size:var(--t-sm)">The quick green fox jumps over the</td></tr>
+        <tr><td class="tok">--t-xs</td><td>11px · labels</td><td class="demo" style="font-size:var(--t-xs)">THE QUICK GREEN FOX JUMPS OVER THE LAZY</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============ SPACE / RADII / GLOW ============ -->
+  <section class="block" id="space">
+    <div class="block-head">
+      <span class="k-label k-label--bracket">03</span>
+      <h2>Spacing, radii &amp; elevation</h2>
+      <p>4px base ramp. Radii kept small on purpose — CRT chrome is sharp and boxy. Elevation is phosphor glow, not Gaussian shadow.</p>
+    </div>
+
+    <h4 class="subhead k-label">Spacing ramp</h4>
+    <div id="spacing-ramp"></div>
+
+    <h4 class="subhead k-label">Radii</h4>
+    <div class="grid cols-5">
+      <div class="grid" style="gap:8px"><div class="radius-box" style="border-radius:var(--r-1)"></div><span class="lab" style="font-family:var(--font-mono);font-size:11px;color:var(--fg-2)">--r-1 · 2px</span></div>
+      <div class="grid" style="gap:8px"><div class="radius-box" style="border-radius:var(--r-2)"></div><span class="lab" style="font-family:var(--font-mono);font-size:11px;color:var(--fg-2)">--r-2 · 4px</span></div>
+      <div class="grid" style="gap:8px"><div class="radius-box" style="border-radius:var(--r-3)"></div><span class="lab" style="font-family:var(--font-mono);font-size:11px;color:var(--fg-2)">--r-3 · 8px</span></div>
+      <div class="grid" style="gap:8px"><div class="radius-box" style="border-radius:var(--r-4)"></div><span class="lab" style="font-family:var(--font-mono);font-size:11px;color:var(--fg-2)">--r-4 · 14px</span></div>
+      <div class="grid" style="gap:8px"><div class="radius-box" style="border-radius:var(--r-pill)"></div><span class="lab" style="font-family:var(--font-mono);font-size:11px;color:var(--fg-2)">--r-pill</span></div>
+    </div>
+
+    <h4 class="subhead k-label">Phosphor glow elevation</h4>
+    <div class="grid cols-3">
+      <div class="grid" style="gap:8px"><div class="glow-box"><div class="glow-inner" style="box-shadow:var(--shadow-glow-sm)"></div></div><span style="font-family:var(--font-mono);font-size:11px;color:var(--fg-2)">--shadow-glow-sm</span></div>
+      <div class="grid" style="gap:8px"><div class="glow-box"><div class="glow-inner" style="box-shadow:var(--shadow-glow-md)"></div></div><span style="font-family:var(--font-mono);font-size:11px;color:var(--fg-2)">--shadow-glow-md</span></div>
+      <div class="grid" style="gap:8px"><div class="glow-box"><div class="glow-inner" style="box-shadow:var(--shadow-glow-lg)"></div></div><span style="font-family:var(--font-mono);font-size:11px;color:var(--fg-2)">--shadow-glow-lg</span></div>
+    </div>
+  </section>
+
+  <!-- ============ COMPONENTS ============ -->
+  <section class="block" id="components">
+    <div class="block-head">
+      <span class="k-label k-label--bracket">04</span>
+      <h2>Components</h2>
+      <p>Sharp corners, hairline borders, mono uppercase labels. Hover brightens and glows — never scales.</p>
+    </div>
+
+    <div class="grid cols-2">
+      <div class="panel">
+        <span class="k-label">[ BUTTONS ]</span>
+        <div class="btn-row">
+          <button class="btn btn-primary">Deploy</button>
+          <button class="btn">Secondary</button>
+          <button class="btn" disabled style="opacity:.4;cursor:default">Disabled</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <span class="k-label">[ SEGMENTED + BADGES ]</span>
+        <div class="btn-row" style="margin-bottom:16px">
+          <div class="segmented">
+            <button aria-pressed="true">Dark</button>
+            <button aria-pressed="false">Light</button>
+            <button aria-pressed="false">Auto</button>
+          </div>
+        </div>
+        <div class="btn-row">
+          <span class="badge ok">● ACTIVE</span>
+          <span class="badge warn">◆ PENDING</span>
+          <span class="badge err">○ FAILED</span>
+          <span class="badge info">SYNCED</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <span class="k-label">[ FORM ]</span>
+        <label class="field" style="margin-bottom:16px">
+          <span class="lab">callsign</span>
+          <input class="input" placeholder="enter callsign…" />
+        </label>
+        <label class="field">
+          <span class="lab">frequency</span>
+          <input class="input" value="137.500 MHz" />
+        </label>
+      </div>
+
+      <div class="panel">
+        <span class="k-label">[ ALERTS ]</span>
+        <div class="alert ok"><span class="mk">[OK]</span><span>Calibration complete. All systems nominal.</span></div>
+        <div class="alert warn"><span class="mk">[!]</span><span>Signal degraded — retrying on backup channel.</span></div>
+        <div class="alert err"><span class="mk">[ERR]</span><span>Link lost. Check antenna alignment.</span></div>
+      </div>
+
+      <div class="panel">
+        <span class="k-label">[ PROGRESS ]</span>
+        <div style="margin-bottom:16px"><div class="progress"><i style="width:68%"></i></div></div>
+        <div class="progress sweep"><i style="width:100%"></i></div>
+        <p class="k-small" style="margin-top:10px">Determinate · indeterminate sweep</p>
+      </div>
+
+      <div class="panel" style="padding:0;overflow:hidden;background:transparent;border:0">
+        <div class="terminal">
+          <div class="bar"><span class="dot r"></span><span class="dot a"></span><span class="dot g"></span><span class="title">~/mission — zsh</span></div>
+          <pre><span class="pr">$</span> status --all
+<span class="ok">[OK]</span> phosphor calibrated
+<span class="ok">[OK]</span> 14 production apps online
+<span class="err">[ERR]</span> link to satellite <span class="mut">(retrying…)</span>
+<span class="pr">$</span> <span class="k-cursor"></span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MOTION ============ -->
+  <section class="block" id="motion">
+    <div class="block-head">
+      <span class="k-label k-label--bracket">05</span>
+      <h2>Motion</h2>
+      <p>Every animation serves a verb — loading, revealing, confirming. The screen responds; the UI never fidgets. <code>steps()</code> easing for machine motion, springs for human motion. Respects <code>prefers-reduced-motion</code>.</p>
+    </div>
+    <div class="grid cols-3">
+      <div class="panel motion-demo">
+        <span class="k-label">[ CURSOR BLINK ]</span>
+        <span style="font-family:var(--font-mono);color:var(--fg-0);font-size:20px">ready<span class="k-cursor"></span></span>
+      </div>
+      <div class="panel motion-demo">
+        <span class="k-label">[ TYPEWRITER ]</span>
+        <span class="typewriter">> initializing phosphor array</span>
+      </div>
+      <div class="panel motion-demo">
+        <span class="k-label">[ SCAN SWEEP ]</span>
+        <div class="progress sweep"><i style="width:100%"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ILLUSTRATIONS ============ -->
+  <section class="block" id="illustrations">
+    <div class="block-head">
+      <span class="k-label k-label--bracket">06</span>
+      <h2>Line geometries</h2>
+      <p>Aerospace blueprints and Mesoamerican ornamental line art. Every motif ships dark (bright phosphor) and light (printed parchment) variants — the page swaps them with the theme.</p>
+    </div>
+    <div class="grid cols-4" id="illo-grid">
+      <!-- populated by JS so the variant always matches the theme -->
+    </div>
+  </section>
+
+  <!-- ============ VOICE ============ -->
+  <section class="block" id="voice" style="border-bottom:0">
+    <div class="block-head">
+      <span class="k-label k-label--bracket">07</span>
+      <h2>Voice &amp; anti-patterns</h2>
+      <p>Terse, technical, slightly conspiratorial. Sentence-case headlines, UPPERCASE mono labels, lowercase terminal output. Numbers when you have them.</p>
+    </div>
+    <div class="grid cols-2">
+      <div class="panel">
+        <span class="k-label">[ DO ]</span>
+        <div class="dd">
+          <div class="row yes"><span class="mk">✓</span><span>Unicode blocks &amp; bracket labels: <code>■ ▲ ●</code>, <code>[OK]</code></span></div>
+          <div class="row yes"><span class="mk">✓</span><span>Elevation via phosphor glow, hairline borders do the work</span></div>
+          <div class="row yes"><span class="mk">✓</span><span>Hover = brighten + glow, never scale or translate</span></div>
+          <div class="row yes"><span class="mk">✓</span><span>"Shipped 14 production apps." — real numbers</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <span class="k-label">[ DON'T ]</span>
+        <div class="dd">
+          <div class="row no"><span class="mk">✕</span><span>Emoji, filled/duotone icon sets, hand-drawn humans</span></div>
+          <div class="row no"><span class="mk">✕</span><span>Bluish-purple gradients or any body-background gradient</span></div>
+          <div class="row no"><span class="mk">✕</span><span>Soft pebble corners — buttons 8px max, modals 14px max</span></div>
+          <div class="row no"><span class="mk">✕</span><span>Gaussian drop-shadows in dark mode, loud scanlines</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <span>PHOSPHOR · <b>design-system.html</b></span>
+  <span class="sep">·</span>
+  <a href="https://github.com/joaquinbozzalla" target="_blank" rel="noopener">[ GITHUB / JOAQUINBOZZALLA ]</a>
+  <span class="sep">·</span>
+  <a href="https://joaquinbozzalla.com" target="_blank" rel="noopener">[ JOAQUINBOZZALLA.COM ]</a>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var toggle = document.getElementById('theme-toggle');
+
+    // ---- live swatch value resolution (accurate in both themes) ----
+    var probe = document.createElement('span');
+    probe.style.display = 'none';
+    document.body.appendChild(probe);
+
+    function rgbToHex(rgb) {
+      var m = rgb.match(/\d+(\.\d+)?/g);
+      if (!m) return rgb;
+      if (m.length >= 4 && parseFloat(m[3]) < 1) {
+        return 'rgba(' + m.slice(0, 3).join(', ') + ', ' + m[3] + ')';
+      }
+      return '#' + m.slice(0, 3).map(function (n) {
+        return ('0' + parseInt(n, 10).toString(16)).slice(-2);
+      }).join('');
+    }
+
+    function paintSwatches() {
+      document.querySelectorAll('.chip[data-token]').forEach(function (chip) {
+        var tok = chip.getAttribute('data-token');
+        chip.style.background = 'var(' + tok + ')';
+        probe.style.color = 'var(' + tok + ')';
+        var resolved = getComputedStyle(probe).color;
+        var out = chip.parentElement.querySelector('[data-val]');
+        if (out) out.textContent = rgbToHex(resolved);
+      });
+    }
+
+    // ---- spacing ramp ----
+    var ramp = [['--sp-1','4'],['--sp-2','8'],['--sp-3','12'],['--sp-4','16'],['--sp-5','24'],['--sp-6','32'],['--sp-7','48'],['--sp-8','64'],['--sp-9','96'],['--sp-10','128']];
+    var rampEl = document.getElementById('spacing-ramp');
+    ramp.forEach(function (r) {
+      var row = document.createElement('div');
+      row.className = 'sp-row';
+      row.innerHTML = '<span class="lab">' + r[0] + ' · ' + r[1] + '</span><span class="sp-bar" style="width:' + r[1] + 'px"></span>';
+      rampEl.appendChild(row);
+    });
+
+    // ---- illustrations (variant follows theme) ----
+    var illos = [
+      ['circuit-core','Circuit core'], ['orbit-scope','Orbit scope'],
+      ['satellite-blueprint','Satellite'], ['wireframe-globe','Wireframe globe'],
+      ['topo-contour','Topo contour'], ['waveform','Waveform'],
+      ['grid-pyramid','Grid pyramid'], ['glyph-frieze','Glyph frieze']
+    ];
+    var illoGrid = document.getElementById('illo-grid');
+    illos.forEach(function (i) {
+      var card = document.createElement('div');
+      card.className = 'illo';
+      card.innerHTML = '<img data-illo="' + i[0] + '" alt="' + i[1] + '" /><span class="name">' + i[1] + '</span>';
+      illoGrid.appendChild(card);
+    });
+    function paintIllos() {
+      var light = root.getAttribute('data-theme') === 'light';
+      document.querySelectorAll('img[data-illo]').forEach(function (img) {
+        var base = img.getAttribute('data-illo');
+        img.src = 'illustrations/' + base + (light ? '-light' : '') + '.svg';
+      });
+    }
+
+    // ---- theme toggle ----
+    function setTheme(t) {
+      root.setAttribute('data-theme', t);
+      toggle.textContent = t === 'light' ? '◑ DARK MODE' : '◐ LIGHT MODE';
+      try { localStorage.setItem('ds:theme', t); } catch (e) {}
+      paintSwatches();
+      paintIllos();
+    }
+    toggle.addEventListener('click', function () {
+      setTheme(root.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+    });
+
+    var saved = 'dark';
+    try { saved = localStorage.getItem('ds:theme') || 'dark'; } catch (e) {}
+    setTheme(saved);
+  })();
+</script>
+</body>
+</html>

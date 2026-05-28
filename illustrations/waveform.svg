@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" fill="none" stroke="#39ff7a" color="#39ff7a" stroke-width="1.25" stroke-linecap="square">
+  
+  <line x1="0" y1="90" x2="320" y2="90" stroke-dasharray="2 4" opacity="0.4"></line>
+  <path d="M0,90 Q15,40 30,90 T60,90 T90,90 T120,90 T150,90 T180,90 T210,90 T240,90 T270,90 T300,90 T320,90" stroke-width="1.5"></path>
+  <path d="M0,90 L10,90 L15,30 L20,150 L25,30 L30,150 L35,90 L80,90 L85,60 L90,120 L95,90 L160,90 L165,40 L170,140 L175,90 L240,90 L245,70 L250,110 L255,90 L320,90" opacity="0.5"></path>
+  
+  <line x1="0" y1="30" x2="320" y2="30" stroke-dasharray="1 6" opacity="0.3"></line>
+  <line x1="0" y1="150" x2="320" y2="150" stroke-dasharray="1 6" opacity="0.3"></line>
+  
+  <g font-family="JetBrains Mono, monospace" font-size="7" fill="#39ff7a" stroke="none" opacity="0.7">
+    <text x="4" y="14">+1.0</text>
+    <text x="4" y="88">0</text>
+    <text x="4" y="172">-1.0</text>
+    <text x="296" y="172">440Hz</text>
+  </g>
+</svg>

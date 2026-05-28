@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" fill="none" stroke="#39ff7a" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter">
+  <!-- glyph-frieze — a blueprint cartouche: framed band of five ornamental
+       line-glyphs (stepped pyramid · concentric squares · radiant sun ·
+       square-spiral greca · diamond eye). Mesoamerican + mission-control. -->
+
+  <!-- double top + bottom rules with corner ticks -->
+  <line x1="8" y1="14" x2="392" y2="14"/>
+  <line x1="8" y1="18.5" x2="392" y2="18.5"/>
+  <line x1="8" y1="181.5" x2="392" y2="181.5"/>
+  <line x1="8" y1="186" x2="392" y2="186"/>
+  <line x1="8" y1="14" x2="8" y2="24"/>
+  <line x1="392" y1="14" x2="392" y2="24"/>
+  <line x1="8" y1="176" x2="8" y2="186"/>
+  <line x1="392" y1="176" x2="392" y2="186"/>
+
+  <!-- index ticks along the top rule -->
+  <g>
+    <line x1="40" y1="18.5" x2="40" y2="23"/>
+    <line x1="80" y1="18.5" x2="80" y2="23"/>
+    <line x1="120" y1="18.5" x2="120" y2="23"/>
+    <line x1="160" y1="18.5" x2="160" y2="23"/>
+    <line x1="200" y1="18.5" x2="200" y2="23"/>
+    <line x1="240" y1="18.5" x2="240" y2="23"/>
+    <line x1="280" y1="18.5" x2="280" y2="23"/>
+    <line x1="320" y1="18.5" x2="320" y2="23"/>
+    <line x1="360" y1="18.5" x2="360" y2="23"/>
+  </g>
+
+  <!-- cell dividers -->
+  <g stroke-dasharray="2 4" opacity="0.6">
+    <line x1="80" y1="62" x2="80" y2="138"/>
+    <line x1="160" y1="62" x2="160" y2="138"/>
+    <line x1="240" y1="62" x2="240" y2="138"/>
+    <line x1="320" y1="62" x2="320" y2="138"/>
+  </g>
+
+  <!-- glyph 1 · stepped pyramid (center x=40) -->
+  <polyline points="14,118 14,106 26,106 26,94 34,94 34,82 46,82 46,94 54,94 54,106 66,106 66,118"/>
+  <line x1="10" y1="122" x2="70" y2="122"/>
+
+  <!-- glyph 2 · concentric squares (center x=120) -->
+  <rect x="96" y="76" width="48" height="48"/>
+  <rect x="105" y="85" width="30" height="30"/>
+  <rect x="113" y="93" width="14" height="14"/>
+  <circle cx="120" cy="100" r="2" fill="#39ff7a"/>
+
+  <!-- glyph 3 · radiant sun (center x=200) -->
+  <circle cx="200" cy="100" r="14"/>
+  <circle cx="200" cy="100" r="2.5" fill="#39ff7a"/>
+  <line x1="200" y1="78" x2="200" y2="68"/>
+  <line x1="200" y1="122" x2="200" y2="132"/>
+  <line x1="178" y1="100" x2="168" y2="100"/>
+  <line x1="222" y1="100" x2="232" y2="100"/>
+  <line x1="210" y1="90" x2="217" y2="83"/>
+  <line x1="190" y1="90" x2="183" y2="83"/>
+  <line x1="210" y1="110" x2="217" y2="117"/>
+  <line x1="190" y1="110" x2="183" y2="117"/>
+
+  <!-- glyph 4 · square-spiral greca (center x=280) -->
+  <polyline points="256,118 256,82 304,82 304,118 268,118 268,94 292,94 292,106 278,106"/>
+
+  <!-- glyph 5 · diamond eye (center x=360) -->
+  <polygon points="360,74 386,100 360,126 334,100"/>
+  <polygon points="360,86 374,100 360,114 346,100"/>
+  <circle cx="360" cy="100" r="2.5" fill="#39ff7a"/>
+
+  <!-- baseline meander rhythm above the bottom rule -->
+  <polyline points="20,160 20,150 36,150 36,160 52,160 52,150 68,150"/>
+  <polyline points="166,160 166,150 182,150 182,160 198,160 198,150 214,150"/>
+  <polyline points="332,160 332,150 348,150 348,160 364,160 364,150 380,150"/>
+</svg>
