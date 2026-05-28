@@ -14,10 +14,10 @@ Modern and minimal in structure; retro in texture.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-39ff7a?style=flat-square&labelColor=04110b)](./LICENSE)
 [![No build](https://img.shields.io/badge/build-none-39ff7a?style=flat-square&labelColor=04110b)](#tech)
-[![Theme](https://img.shields.io/badge/theme-dark%20%2B%20light-39ff7a?style=flat-square&labelColor=04110b)](#what-s-inside)
+[![Theme](https://img.shields.io/badge/theme-dark%20%2B%20light-39ff7a?style=flat-square&labelColor=04110b)](#whats-inside)
 [![Made by](https://img.shields.io/badge/by-joaquinbozzalla-39ff7a?style=flat-square&labelColor=04110b)](https://joaquinbozzalla.com)
 
-[**design-system.html**](./design-system.html) &nbsp;·&nbsp; [**editorial-content.html**](./editorial-content.html) &nbsp;·&nbsp; [**DESIGN.md**](./DESIGN.md)
+[**design-system.html**](./design-system.html) &nbsp;·&nbsp; [**editorial-content.html**](./editorial-content.html) &nbsp;·&nbsp; [**DESIGN.md**](./DESIGN.md) &nbsp;·&nbsp; [**AGENTS.md**](./AGENTS.md)
 
 </div>
 
@@ -47,11 +47,10 @@ Both pages share the same theme toggle; the state persists across them via `loca
 ├── editorial-content.html      # the system, applied to editorial content
 ├── colors_and_type.css         # all tokens + @font-face + base type + animations
 ├── illustrations/              # 8 SVG line-art motifs × 2 theme variants (*.svg + *-light.svg)
-├── fonts/
-│   ├── Satoshi-*.otf           # optional alternate sans (10 weights)
-│   └── ibm-plex-mono/          # self-hosted primary mono (9 weights) + OFL
+├── fonts/ibm-plex-mono/        # self-hosted primary mono (9 weights) + OFL.txt
 ├── export/                     # the same tokens as CSS / SCSS / JS / JSON
-└── DESIGN.md                   # design rules, voice, anti-patterns — the source of truth
+├── DESIGN.md                   # design rules, voice, anti-patterns — the source of truth
+└── AGENTS.md                   # how to feed this system to Claude Code, Codex, and other LLMs
 ```
 
 ---
@@ -83,6 +82,49 @@ If you already have a stylesheet, grab the format you want from [`export/`](./ex
 
 ---
 
+## Use it with LLMs (Claude Code, Codex, Cursor…)
+
+This system was designed to be machine-readable: `DESIGN.md` is structured, `colors_and_type.css` is the literal source of truth, and `export/tokens.json` is the W3C-DTCG canonical form. Point your coding agent at this repo and it will follow the rules.
+
+**The two files an agent needs to read first:** [`DESIGN.md`](./DESIGN.md) (rules, voice, anti-patterns) and [`AGENTS.md`](./AGENTS.md) (how to apply them).
+
+### Claude Code
+
+```bash
+# Inside your project — clone the system somewhere reachable
+git clone https://github.com/joaquinbozzalla/phosphor-design-system.git
+cd phosphor-design-system
+
+# Launch Claude Code in the system's directory and ask it to read the rules
+claude
+> /memory add ./DESIGN.md
+> /memory add ./AGENTS.md
+> Now build me a hero section that follows this system.
+```
+
+Or reference the system from inside another project by adding to your `CLAUDE.md`:
+
+```md
+This project uses the Phosphor Design System (https://github.com/joaquinbozzalla/phosphor-design-system).
+Before generating any UI, read ./vendor/phosphor-design-system/DESIGN.md and ./vendor/phosphor-design-system/AGENTS.md.
+Use the tokens from ./vendor/phosphor-design-system/colors_and_type.css. Never hardcode colors or spacing.
+```
+
+### Codex / Cursor / other agents
+
+Either:
+
+1. **Clone into the project** (`./vendor/phosphor-design-system/`) and add a rule file (`.cursorrules`, `AGENTS.md`, or the equivalent) pointing the agent at `DESIGN.md` + `colors_and_type.css`.
+2. **Paste the tokens directly** into the agent's context: `export/tokens.json` is the most compact, fully-typed form (W3C DTCG).
+
+A minimal prompt that works across agents:
+
+> You are building a UI in the Phosphor Design System. Read `DESIGN.md` (rules + anti-patterns) and `AGENTS.md` (application notes). Use the tokens in `colors_and_type.css`/`export/tokens.css` exclusively — no hardcoded values. Match the voice and the negative space of `design-system.html` and `editorial-content.html`.
+
+See [`AGENTS.md`](./AGENTS.md) for the full agent-facing brief (token glossary, what to copy from existing pages, the do/don't list).
+
+---
+
 ## Tech
 
 Vanilla HTML + CSS. No framework, no build, no dependencies. Themed via a single `data-theme` attribute and CSS custom properties.
@@ -109,21 +151,19 @@ Modern evergreen browsers (Chrome, Firefox, Safari, Edge). Uses `color-mix()`, C
 
 ## Credits
 
-- **IBM Plex Mono** — primary monospace, self-hosted under `fonts/ibm-plex-mono/`. SIL Open Font License (see [`fonts/ibm-plex-mono/OFL.txt`](./fonts/ibm-plex-mono/OFL.txt)).
-- **Satoshi** — optional alternate sans, by [Indian Type Foundry / Fontshare](https://www.fontshare.com/fonts/satoshi).
-- **VT323** — CRT pixel display, via [Google Fonts](https://fonts.google.com/specimen/VT323).
+- **IBM Plex Mono** — the single typeface across the system, self-hosted under [`fonts/ibm-plex-mono/`](./fonts/ibm-plex-mono). SIL Open Font License (see [`fonts/ibm-plex-mono/OFL.txt`](./fonts/ibm-plex-mono/OFL.txt)).
 
 ---
 
 ## License
 
-[MIT](./LICENSE) for the code, CSS, tokens, and illustrations. Bundled fonts retain their original licenses (IBM Plex Mono under OFL; Satoshi per Fontshare's terms).
+[MIT](./LICENSE) for the code, CSS, tokens, and illustrations. IBM Plex Mono keeps its OFL.
 
 ---
 
 <div align="center">
 
-Made by [**Joaquín Bozzalla**](https://joaquinbozzalla.com) &nbsp;·&nbsp; [github.com/joaquinbozzalla](https://github.com/joaquinbozzalla)
+Made by [**Joaquín Bozzalla**](https://joaquinbozzalla.com) with [**Open Design**](https://github.com/nexu-io/open-design) &nbsp;·&nbsp; [github.com/joaquinbozzalla](https://github.com/joaquinbozzalla)
 
 `> one thousand no's for every yes`
 

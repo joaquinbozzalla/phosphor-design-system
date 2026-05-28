@@ -34,6 +34,6 @@ const bg = colorDark.bg1; // "#04110b"
 ```
 
 ## Notes
-- Fonts are referenced, not embedded. IBM Plex Mono (primary, `--font-sans`/`--font-mono`) is self-hosted in the project root; Satoshi (alternate, `--font-alt`) ships in `../fonts/`; VT323 loads via Google Fonts.
+- Fonts are referenced, not embedded. IBM Plex Mono (`--font-sans`/`--font-mono`) is self-hosted under `../fonts/ibm-plex-mono/` — ship that folder alongside the tokens if you want the actual font files.
 - Glow shadows are theme-specific (phosphor glow in dark, hard printed offsets in light) and live in `tokens.json` under `shadow.dark` / `shadow.light` and in `tokens.css`.
 - For full typography classes, utilities and animations, use the project's `colors_and_type.css` — this export is tokens only.

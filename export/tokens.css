@@ -97,8 +97,6 @@
   /* Type */
   --font-sans: "IBM Plex Mono", "SF Mono", "Menlo", "Consolas", ui-monospace, monospace;
   --font-mono: "IBM Plex Mono", "SF Mono", "Menlo", "Consolas", monospace;
-  --font-alt: "Satoshi", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  --font-crt: "VT323", "IBM Plex Mono", monospace;
 
   --t-xs: 11px;
   --t-sm: 13px;

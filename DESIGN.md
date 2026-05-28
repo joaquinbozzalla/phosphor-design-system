@@ -82,20 +82,16 @@ Inverted phosphor — green ink on a parchment off-white. `--bg-1` `#f1f3e3`,
 
 ## 3. Typography
 
-**IBM Plex Mono is the primary family for the entire system — UI, body, headings, and
+**IBM Plex Mono is the single family for the entire system — UI, body, headings, and
 display all run on it.** The monospace everywhere gives the whole product its machine-room
-character; VT323 adds the occasional pixel boot screen (~5%). Satoshi is kept as an optional
-alternate sans face (`--font-alt`) for cases that explicitly call for a proportional face.
+character. One face, one voice; no proportional fallback, no pixel display.
 
 | Family | Token | Usage |
 |---|---|---|
-| **IBM Plex Mono** (weights 300–700 + italics, self-hosted in root) | `--font-sans` / `--font-mono` | UI + display + body + headings, labels, code, terminal output, metadata |
-| **VT323** (CDN) | `--font-crt` | chunky pixel boot screens / CRT headers — ~5% usage, sparingly |
-| **Satoshi** (10 weights, bundled in `fonts/`) | `--font-alt` | optional alternate proportional sans, when a non-mono face is explicitly wanted |
+| **IBM Plex Mono** (weights 300–700 + italics, self-hosted in `fonts/ibm-plex-mono/`) | `--font-sans` / `--font-mono` | UI + display + body + headings, labels, code, terminal output, metadata |
 
-> Note: IBM Plex Mono tops out at weight 700, so `--font-sans` display (`.k-display`)
-> uses 700 as its heaviest weight — there is no 900. VT323 is loaded via Google Fonts
-> `@import`; IBM Plex Mono and Satoshi are self-hosted.
+> Note: IBM Plex Mono tops out at weight 700, so display (`.k-display`) uses 700 as
+> its heaviest weight — there is no 900.
 
 **Type scale (1.250 major third):** `--t-xs 11` · `--t-sm 13` · `--t-md 15` (body) ·
 `--t-lg 18` · `--t-xl 22` · `--t-2xl 28` · `--t-3xl 36` · `--t-4xl 48` · `--t-5xl 64` ·
@@ -104,7 +100,7 @@ for monospace labels.
 
 Semantic classes: `.k-display`, `h1/.k-h1` … `h4/.k-h4`, `.k-lead`, `.k-label`
 (uppercase wide-tracked mono — the workhorse), `.k-label--bracket` (`[ ... ]`),
-`.k-prompt` (green `>` prefix), `.k-crt` (pixel), `code/pre`.
+`.k-prompt` (green `>` prefix), `code/pre`.
 
 ---
 

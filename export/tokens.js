@@ -26,8 +26,6 @@ export const colorLight = {
 export const font = {
   sans: '"IBM Plex Mono", "SF Mono", "Menlo", "Consolas", ui-monospace, monospace',
   mono: '"IBM Plex Mono", "SF Mono", "Menlo", "Consolas", monospace',
-  alt: '"Satoshi", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
-  crt: '"VT323", "IBM Plex Mono", monospace',
 };
 
 export const fontSize = {
